@@ -4,9 +4,7 @@ import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.rubric.Rubric;
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.team.Team;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -27,7 +25,7 @@ public class Section implements Serializable {
 
     private String academicYear;
 
-    //@OneToMany({CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "team.name??")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "sectionName")
     private List<Team> teams;
 
     //@OneToMany({CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "instructor.name??")
