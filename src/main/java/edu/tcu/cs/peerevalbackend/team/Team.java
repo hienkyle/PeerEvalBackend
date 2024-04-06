@@ -13,7 +13,8 @@ public class Team implements Serializable {
     @Id
     private String teamName;
 
-    /*
+    /* DONE
+    * **** Confirmed with Maribel ****
     * Has an error because Section is not annotated with the type of relationship
     * Ensure there is a field List<Team> teams in Section
     * Ensure field in Section class is annotated w/ @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "sectionName")
