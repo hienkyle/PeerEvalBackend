@@ -11,4 +11,8 @@ public class InstructorService {
     public InstructorService(InstructorRepository instructorRepository) {
         this.instructorRepository = instructorRepository;
     }
+
+    public Instructor findById(String instructorId) {
+        return null;
+    }
 }
