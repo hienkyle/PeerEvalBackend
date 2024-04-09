@@ -1,7 +1,8 @@
 package edu.tcu.cs.peerevalbackend.section;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SectionRepository {
+public interface SectionRepository extends JpaRepository<Section, String> {
 }
