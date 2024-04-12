@@ -15,7 +15,6 @@ public class StudentDtoToStudentConverter implements Converter<StudentDto, Stude
         student.setLastName(source.lastName());
         student.setSectionName(source.sectionName());
         student.setAcademicYear(source.academicYear());
-        student.setTeam(source.team());
         return student;
     }
 }

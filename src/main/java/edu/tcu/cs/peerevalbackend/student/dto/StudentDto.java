@@ -6,7 +6,6 @@ public record StudentDto(
     String middleInitial,
     String lastName,
     String sectionName,
-
     String academicYear,
     TeamDto team
     )
