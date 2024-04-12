@@ -14,6 +14,8 @@ public class SectionService {
         this.sectionRepository = sectionRepository;
     }
 
-    public Section findById(String sectionId)
+    public Section findById(String sectionId){
+        return  null;
+    }
 
 }
