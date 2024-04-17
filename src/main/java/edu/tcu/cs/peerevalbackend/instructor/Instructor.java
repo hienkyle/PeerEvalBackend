@@ -2,17 +2,21 @@ package edu.tcu.cs.peerevalbackend.instructor;
 
 import edu.tcu.cs.peerevalbackend.section.Section;
 import edu.tcu.cs.peerevalbackend.team.Team;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Instructor {
+
+public class Instructor implements Serializable {
+    @Id
     private String instructorId;
 
-    private String firstName;
-
-    private String middleName;
-
-    private String lastName;
+    private String name;
 
     private String status;
 
@@ -20,8 +24,10 @@ public class Instructor {
 
     private String deactivateReason;
 
+    @ManyToMany
     private List<Team> teams;
 
+    @ManyToMany
     private Section section;
 
     public Instructor() {
@@ -36,28 +42,12 @@ public class Instructor {
         this.instructorId = instructorId;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getStatus() {
@@ -98,5 +88,11 @@ public class Instructor {
 
     public void setSection(Section section) {
         this.section = section;
+    }
+
+    public List<String> getTeamNames(){
+        return this.teams != null ?
+                this.teams.stream().map(team -> team.getTeamName()).collect(Collectors.toList())
+                : Collections.emptyList();
     }
 }

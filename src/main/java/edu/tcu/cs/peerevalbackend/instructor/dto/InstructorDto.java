@@ -1,17 +1,16 @@
 package edu.tcu.cs.peerevalbackend.instructor.dto;
 
-import edu.tcu.cs.peerevalbackend.section.Section;
-import edu.tcu.cs.peerevalbackend.team.Team;
+import edu.tcu.cs.peerevalbackend.team.dto.TeamDto;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
 public record InstructorDto(String instructorId,
-                            String firstName,
-                            String middleName,
-                            String lastName,
+                            @NotEmpty(message = "name is required.")
+                            String name,
+                            @NotEmpty(message = "status is required.")
                             String status,
-                            String password,
-                            String deactivateReason,
-                            List<TeamDto> teamDtos,
-                            SectionDto sectionDto) {
+                            @NotEmpty(message = "list of teams is required.")
+                            List<String> teamNames
+                            ){
 }
