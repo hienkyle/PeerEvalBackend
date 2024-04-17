@@ -26,3 +26,4 @@ public record TeamDto(@NotEmpty(message = "Team name is required.")
                       //Change to SectionDto
                       Section sectionName) {
 }
+
