@@ -13,15 +13,13 @@ public class SectionService {
     public SectionService(SectionRepository sectionRepository) { //injection
         this.sectionRepository = sectionRepository;
     }
-
     public Section findById(String sectionName) {
         return this.sectionRepository.findById(sectionName)
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
     }
-
     //to save the section
     public Section save(Section newSection) {
         return this.sectionRepository.save(newSection);
-    }
+
 
 }
