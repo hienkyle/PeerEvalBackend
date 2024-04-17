@@ -15,7 +15,7 @@ public class Student {
     private String middle_initial;
     private String last_name;
     private String password;
-    private String team_name;
+    private Team team_name;
     private String section_name;
 
     public  Student(){
