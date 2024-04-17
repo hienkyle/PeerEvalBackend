@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevalbackend.instructor;
 
 import edu.tcu.cs.peerevalbackend.section.Section;
 import edu.tcu.cs.peerevalbackend.team.Team;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 
@@ -11,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Entity
 public class Instructor implements Serializable {
     @Id
     private String instructorId;
