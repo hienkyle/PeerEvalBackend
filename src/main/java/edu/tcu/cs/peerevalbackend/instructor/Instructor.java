@@ -29,7 +29,7 @@ public class Instructor implements Serializable {
     private List<Team> teams;
 
     @ManyToMany
-    private Section section;
+    private List<Section> sections;
 
     public Instructor() {
 
@@ -83,12 +83,12 @@ public class Instructor implements Serializable {
         this.teams = teams;
     }
 
-    public Section getSection() {
-        return section;
+    public List<Section> getSections() {
+        return sections;
     }
 
-    public void setSection(Section section) {
-        this.section = section;
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
     }
 
     public List<String> getTeamNames(){
