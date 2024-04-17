@@ -1,23 +1,26 @@
 package edu.tcu.cs.peerevalbackend.section;
 
-import edu.tcu.cs.peerevalbackend.instructor.Instructor;
-import edu.tcu.cs.peerevalbackend.rubric.Rubric;
-import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.team.Team;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 public class Section implements Serializable {
 
-    @Id
+    @Id //this field 'sectionName' can be used as the primary key
     private String sectionName;
 
     private String academicYear;
 
+    private String firstAndLastDate;
+
+    //collection/list of teams it 'owns'; mapped by value has to be the same as the many side value name
+    //the one side, Section, gives up responsibility of maintaining the foreign key (many side (Team) will store the FK), ORM will be used so that references become FK
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "sectionName")
     private List<Team> teams;
 
@@ -51,6 +54,14 @@ public class Section implements Serializable {
 
     public void setAcademicYear(String academicYear) {
         this.academicYear = academicYear;
+    }
+
+    public String getFirstAndLastDate() {
+        return firstAndLastDate;
+    }
+
+    public void setFirstAndLastDate(String firstAndLastDate) {
+        this.firstAndLastDate = firstAndLastDate;
     }
 
     public List<Team> getTeams() {
