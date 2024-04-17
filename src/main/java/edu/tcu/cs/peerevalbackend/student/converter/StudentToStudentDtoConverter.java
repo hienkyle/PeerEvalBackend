@@ -22,6 +22,7 @@ public class StudentToStudentDtoConverter implements Converter<Student, StudentD
                 source.getLastName(),
                 source.getSectionName(),
                 source.getAcademicYear(),
+                source.getNumberOfWars(),
                 source.getTeam() != null
                         ? this.teamDtoToTeamConverter.convert(source.getTeam())
                         : null);

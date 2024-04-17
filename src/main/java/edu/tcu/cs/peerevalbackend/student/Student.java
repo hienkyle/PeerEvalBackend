@@ -42,7 +42,18 @@ public class Student {
         this.team =  team;
         List<Student> currentStudents = team.getMembers();
         currentStudents.add(this);
-        return;
+        team.setMembers(currentStudents);
+    }
+    public void addWar(WeeklyActivityReport war){
+        war.setAuthor(this);
+        this.wars.add(war);
+    }
+    public void removeWar(WeeklyActivityReport war){
+       war.setAuthor(null);
+       this.wars.remove(war);
+    }
+    public Integer getNumberOfWars() {
+        return this.wars.size();
     }
 
 }

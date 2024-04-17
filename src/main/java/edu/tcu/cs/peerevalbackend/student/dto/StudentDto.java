@@ -7,6 +7,7 @@ public record StudentDto(
     String lastName,
     String sectionName,
     String academicYear,
+    Integer numberOfWars,
     TeamDto team
     )
 {}

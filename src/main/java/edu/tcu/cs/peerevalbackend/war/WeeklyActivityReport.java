@@ -1,10 +1,7 @@
 package edu.tcu.cs.peerevalbackend.war;
 
 import edu.tcu.cs.peerevalbackend.student.Student;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,11 +10,11 @@ import lombok.Setter;
 @Setter
 public class WeeklyActivityReport {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Integer warId;
 
     @ManyToOne
     Student author;
-
 
     String task;
 
