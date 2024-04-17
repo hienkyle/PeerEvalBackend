@@ -1,9 +1,10 @@
-package edu.tcu.cs.peerevalbackend.student;
+package edu.tcu.cs.peerevalbackend.war;
 
+import edu.tcu.cs.peerevalbackend.student.Student;
 import org.springframework.data.jpa.domain.Specification;
 
-public class StudentSpecs {
-    public static Specification<Student> containsFirstName(String providedName){
+public class WarSpecs {
+    public static Specification<Student> betweenActiveWeeks(String startWeek,String endWeek){
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), "%" + providedName.toLowerCase() + "%");
     }
     public static Specification<Student> containsLastName(String providedName){
