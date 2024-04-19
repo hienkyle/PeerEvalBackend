@@ -41,7 +41,6 @@ public class Student {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "studentAbout")
     private  List<PeerEvalReport> peerEvalsAbout;
 
-    //Need to fill in mappedBy once PeerEvalReport class is done
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "studentBy")
     private  List<PeerEvalReport> peerEvalsBy;
 

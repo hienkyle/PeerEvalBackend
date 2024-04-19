@@ -67,9 +67,5 @@ public class StudentController {
         Page<StudentDto> studentDtoPage = studnetPage.map(this.studentToStudentDtoConverter::convert);
         return new Result(true, StatusCode.SUCCESS, "Found by criteria success", studentDtoPage);
     }
-    @GetMapping("/{studentId}/war")
-    public Result findWarsByStudent(@PathVariable Integer studentId){
-        return null;
-    }
 
 }
