@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevalbackend.student.converter;
 
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.student.dto.StudentDto;
+import edu.tcu.cs.peerevalbackend.team.dto.TeamDto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

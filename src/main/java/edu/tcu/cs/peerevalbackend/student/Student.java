@@ -1,6 +1,8 @@
 package edu.tcu.cs.peerevalbackend.student;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import edu.tcu.cs.peerevalbackend.peereval.PeerEvalReport;
+import edu.tcu.cs.peerevalbackend.section.Section;
 import edu.tcu.cs.peerevalbackend.team.Team;
 import edu.tcu.cs.peerevalbackend.war.WeeklyActivityReport;
 import jakarta.persistence.*;
@@ -30,10 +32,18 @@ public class Student {
     @ManyToOne
     private Team team;
 
-    private String sectionName;
+    @ManyToOne
+    private Section section;
 
     @OneToMany(cascade= {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "author")
     private List<WeeklyActivityReport> wars = new ArrayList<>();
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "studentAbout")
+    private  List<PeerEvalReport> peerEvalsAbout;
+
+    //Need to fill in mappedBy once PeerEvalReport class is done
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},mappedBy = "studentBy")
+    private  List<PeerEvalReport> peerEvalsBy;
 
     public  Student(){
 
