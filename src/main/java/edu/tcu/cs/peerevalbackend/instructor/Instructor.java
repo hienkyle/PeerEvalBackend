@@ -94,6 +94,6 @@ public class Instructor implements Serializable {
     public List<String> getTeamNames(){
         return this.teams != null ?
                 this.teams.stream().map(team -> team.getTeamName()).collect(Collectors.toList())
-                : Collections.emptyList();
+                : null;
     }
 }
