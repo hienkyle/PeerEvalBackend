@@ -31,6 +31,13 @@ public class InstructorController {
         return null;
     }
 
+    /*
+     * Use case 22: View an instructor
+     *
+     * @param instructorId - the id of the instructor
+     *
+     * @return Result
+     */
     @GetMapping("/{instructorId}")
     public Result viewInstructor(@PathVariable String instructorId){
         Instructor foundInstructor = this.instructorService.findById(instructorId);
