@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevalbackend.student.converter;
 
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.student.dto.StudentDto;
+import edu.tcu.cs.peerevalbackend.team.converter.TeamDtoToTeamConverter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class StudentToStudentDtoConverter implements Converter<Student, StudentDto> {
     private final TeamDtoToTeamConverter teamDtoToTeamConverter;
 
-    public StudentDtoToStudentConverter(TeamDtoToTeamConverter teamDtoToTeamConverter){
+    public StudentToStudentDtoConverter(TeamDtoToTeamConverter teamDtoToTeamConverter){
         this.teamDtoToTeamConverter = teamDtoToTeamConverter;
     }
 
