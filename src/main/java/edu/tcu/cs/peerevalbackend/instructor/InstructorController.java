@@ -4,10 +4,8 @@ import edu.tcu.cs.peerevalbackend.instructor.converter.InstructorToInstructorDto
 import edu.tcu.cs.peerevalbackend.instructor.dto.InstructorDto;
 import edu.tcu.cs.peerevalbackend.system.Result;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url}/instructors")
@@ -34,9 +32,13 @@ public class InstructorController {
     /*
      * Use case 22: View an instructor
      *
+     * Name: Hien
+     *
      * @param instructorId - the id of the instructor
      *
      * @return Result
+     *
+     * Note: NOT TESTED
      */
     @GetMapping("/{instructorId}")
     public Result viewInstructor(@PathVariable String instructorId){
@@ -45,11 +47,40 @@ public class InstructorController {
         return new Result(true, StatusCode.SUCCESS, "Find One Success", instructorDto);
     }
 
-    public Result deactivateInstructor(){
-        return null;
+    /*
+     * Use case 23: Deactivate an instructor
+     *
+     * Name: Hien
+     *
+     * @param instructorId - the id of the instructor
+     * @param reason - reason for deactivation
+     *
+     * @return Result
+     *
+     * Note: NOT TESTED
+     */
+    @PutMapping("/deactivate/{instructorId}")
+    public Result deactivateInstructor(@PathVariable String instructorId, @Valid @RequestBody String reason){
+        Instructor deactivatedInstructor = this.instructorService.deactivate(instructorId, reason);
+        InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert(deactivatedInstructor);
+        return new Result(true, StatusCode.SUCCESS, "Deactivate Success", instructorDto);
     }
 
-    public Result reactivateInstructor(){
-        return null;
+    /*
+     * Use case 24: Reactivate an instructor
+     *
+     * Name: Hien
+     *
+     * @param instructorId - the id of the instructor
+     *
+     * @return Result
+     *
+     * Note: NOT TESTED
+     */
+    @PutMapping("/activate/{instructorId}")
+    public Result reactivateInstructor(@PathVariable String instructorId){
+        Instructor reactivatedInstructor = this.instructorService.reactivate(instructorId);
+        InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert(reactivatedInstructor);
+        return new Result(true, StatusCode.SUCCESS, "Reactivate Success", instructorDto);
     }
 }
