@@ -1,14 +1,19 @@
 package edu.tcu.cs.peerevalbackend.war;
 
+import edu.tcu.cs.peerevalbackend.student.Student;
+import edu.tcu.cs.peerevalbackend.student.dto.StudentDto;
 import edu.tcu.cs.peerevalbackend.system.Result;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import edu.tcu.cs.peerevalbackend.war.converter.WarDtoToWarConverter;
 import edu.tcu.cs.peerevalbackend.war.converter.WarToWarDtoConverter;
 import edu.tcu.cs.peerevalbackend.war.dto.WarDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,6 +59,12 @@ public class WarController {
         WeeklyActivityReport updatedWar = this.warService.update(warId, update);
         WarDto updatedDto =  this.warToWarDtoConverter.convert(updatedWar);
         return new Result(true, StatusCode.SUCCESS, "Update Success", updatedDto);
+    }
+    @PostMapping("/search")
+    public Result findWarByCriteria(@RequestBody Map<String, String> searchCriteria, Pageable pagable){
+        Page<WeeklyActivityReport> warPage = this.warService.findByCriteria(searchCriteria, pagable);
+        Page<WarDto> warDtoPage = warPage.map(this.warToWarDtoConverter::convert);
+        return new Result(true, StatusCode.SUCCESS, "Found by criteria success", warDtoPage);
     }
 
 }

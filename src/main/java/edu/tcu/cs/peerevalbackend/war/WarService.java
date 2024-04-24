@@ -2,11 +2,17 @@ package edu.tcu.cs.peerevalbackend.war;
 
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.student.StudentRepository;
+import edu.tcu.cs.peerevalbackend.student.StudentSpecs;
 import jakarta.transaction.Transactional;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -51,6 +57,19 @@ public class WarService {
                     return this.warRepository.save(oldWar);
                 })
                 .orElseThrow(() -> new ObjectNotFoundException("Weekly Activity Report", warId));
+    }
+    public Page<WeeklyActivityReport> findByCriteria(Map<String, String> searchCriteria, Pageable pageable) {
+        Specification<WeeklyActivityReport> spec = Specification.where(null);
+
+        //For this if statement need to figure out how active weeks will work
+        if(StringUtils.hasLength(searchCriteria.get("activeWeeks"))){
+            spec = spec.and(WarSpecs.betweenActiveWeeks(searchCriteria.get("startWeek"),searchCriteria.get("endWeek")));
+        }
+        if(StringUtils.hasLength(searchCriteria.get("author"))){
+            spec = spec.and(WarSpecs.containsAuthorFirstName(searchCriteria.get("author")));
+        }
+
+        return this.warRepository.findAll(spec, pageable);
     }
 
 

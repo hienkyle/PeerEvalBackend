@@ -55,7 +55,7 @@ public class StudentController {
         return new Result(true, StatusCode.SUCCESS, "Successfully found student", foundDto);
     }
 
-    @GetMapping("")
+    @GetMapping()
     public Result getAllStudents(){
         List<Student> foundStudents = studentService.findAll();
         List<StudentDto>  studentDtos = foundStudents.stream().map(this.studentToStudentDtoConverter::convert).collect(Collectors.toList());
@@ -66,10 +66,6 @@ public class StudentController {
         Page<Student> studnetPage = this.studentService.findByCriteria(searchCriteria, pagable);
         Page<StudentDto> studentDtoPage = studnetPage.map(this.studentToStudentDtoConverter::convert);
         return new Result(true, StatusCode.SUCCESS, "Found by criteria success", studentDtoPage);
-    }
-    @GetMapping("/{studentId}/war")
-    public Result findWarsByStudent(@PathVariable Integer studentId){
-        return null;
     }
 
 }
