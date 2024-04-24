@@ -20,6 +20,6 @@ public class SectionService {
     //to save the section
     public Section save(Section newSection) {
         return this.sectionRepository.save(newSection);
-    }
-
+      }
+ }
 }
