@@ -49,9 +49,9 @@ public class Student {
     }
     public void assignToTeam(Team team){
         this.team =  team;
-        List<Student> currentStudents = team.getMembers();
+        List<Student> currentStudents = team.getStudents();
         currentStudents.add(this);
-        team.setMembers(currentStudents);
+        team.setStudents(currentStudents);
     }
     public void addWar(WeeklyActivityReport war){
         war.setAuthor(this);
