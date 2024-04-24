@@ -55,7 +55,7 @@ public class StudentController {
         return new Result(true, StatusCode.SUCCESS, "Successfully found student", foundDto);
     }
 
-    @GetMapping("")
+    @GetMapping()
     public Result getAllStudents(){
         List<Student> foundStudents = studentService.findAll();
         List<StudentDto>  studentDtos = foundStudents.stream().map(this.studentToStudentDtoConverter::convert).collect(Collectors.toList());
