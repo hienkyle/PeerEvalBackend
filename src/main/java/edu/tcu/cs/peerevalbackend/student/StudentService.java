@@ -1,9 +1,6 @@
 package edu.tcu.cs.peerevalbackend.student;
 
 import edu.tcu.cs.peerevalbackend.student.utils.IdWorker;
-import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
-import edu.tcu.cs.peerevalbackend.team.Team;
-import edu.tcu.cs.peerevalbackend.team.TeamRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
