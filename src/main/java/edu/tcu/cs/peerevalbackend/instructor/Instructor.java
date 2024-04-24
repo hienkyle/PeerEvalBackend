@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +33,8 @@ public class Instructor implements Serializable {
     private List<Section> sections;
 
     public Instructor() {
-
+        teams = new ArrayList<>();
+        sections = new ArrayList<>();
     }
 
     public String getInstructorId() {
@@ -94,6 +96,10 @@ public class Instructor implements Serializable {
     public List<String> getTeamNames(){
         return this.teams != null ?
                 this.teams.stream().map(team -> team.getTeamName()).collect(Collectors.toList())
-                : Collections.emptyList();
+                : null;
+    }
+
+    public void addTeam(Team team){
+        this.teams.add(team);
     }
 }

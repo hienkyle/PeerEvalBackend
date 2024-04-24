@@ -15,7 +15,7 @@ public class StudentSpecs {
     }
     public static Specification<Student> hasTeamName(String providedAcademicYear){
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(criteriaBuilder.lower(root.get("team").get("teamName")), providedAcademicYear.toLowerCase());
+                criteriaBuilder.equal(criteriaBuilder.lower(root.get("academicYear")), providedAcademicYear.toLowerCase());
     }
 
 }

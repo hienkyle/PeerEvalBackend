@@ -45,19 +45,22 @@ public class Team implements Serializable {
     * The new annotation should be: @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "teamName")
     */
     @OneToMany(mappedBy = "teamName")
-    private List<Student> members;
+    private List<Student> students;
+
+    String academicYear;
 
     //Dr. Wei has an empty constructor
     public Team() {
     }
 
     //Dr. Wei does not have an overloaded constructor, I included it just in case
-    public Team(String teamName, Section sectionName, List<Date> activeWeeks, List<Instructor> instructors, List<Student> members) {
+    public Team(String teamName, Section sectionName, List<Date> activeWeeks, List<Instructor> instructors, List<Student> students, String academicYear) {
         this.teamName = teamName;
         this.sectionName = sectionName;
         this.activeWeeks = activeWeeks;
         this.instructors = instructors;
-        this.members = members;
+        this.students = students;
+        this.academicYear = academicYear;
     }
 
     /* Below will be getters and setters */
@@ -94,11 +97,84 @@ public class Team implements Serializable {
         this.instructors = instructors;
     }
 
-    public List<Student> getMembers() {
-        return members;
+    public List<Student> getStudents() {
+        return students;
     }
 
-    public void setMembers(List<Student> members) {
-        this.members = members;
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
+    public String getAcademicYear() {
+        return academicYear;
+    }
+
+    public void setAcademicYear(String academicYear) {
+        this.academicYear = academicYear;
+    }
+
+    // *** THESE ARE NEEDED IN service AND controller
+
+    /*
+    * For use case 12
+    */
+    public void addStudent(Student student) {
+        student.setTeamName(this);
+        this.students.add(student);
+    }
+
+    public Integer getNumberOfStudents() {
+        return this.students.size();
+    }
+
+    /*
+     * For use case 19
+     */
+    public void addInstructor(Instructor instructor) {
+        instructor.setTeamName(this);
+        this.instructors.add(instructor);
+    }
+
+    public Integer getNumberOfInstructors() {
+        return this.instructors.size();
+    }
+
+    /* For the different remove methods:
+    * (1) Make sure Student class has setTeamName() method or something similar
+    * (2) Make sure Instructor class has setTeamName() method or something similar
+    */
+
+    /*
+    * removeAll methods used when deleting a team
+    * For use case 14
+    */
+    public void removeAllStudents() {
+        //Iterate through list of students in a team and set team to null
+        this.students.stream().forEach(student -> student.setTeamName(null));
+        this.students = new ArrayList<>();
+    }
+
+    public void removeAllInstructors() {
+        //Iterate through list of instructors in a team and set team to null
+        this.instructors.stream().forEach(instructor -> instructor.setTeamName(null));
+        this.instructors = new ArrayList<>();
+    }
+
+    /*
+    * For use case 13
+    */
+    public void removeStudent(Student studentToBeAssigned) {
+        //Remove specific student from team
+        studentToBeAssigned.setTeamName(null);
+        this.students.remove(studentToBeAssigned);
+    }
+
+    /*
+    * For use case 20
+    */
+    public void removeInstructor(Instructor instructorToBeAssigned) {
+        //Remove specific instructor from team
+        instructorToBeAssigned.setTeamName(null);
+        this.instructors.remove(instructorToBeAssigned);
     }
 }
