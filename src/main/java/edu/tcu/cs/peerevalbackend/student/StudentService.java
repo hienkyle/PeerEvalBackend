@@ -1,6 +1,9 @@
 package edu.tcu.cs.peerevalbackend.student;
 
 import edu.tcu.cs.peerevalbackend.student.utils.IdWorker;
+import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
+import edu.tcu.cs.peerevalbackend.team.Team;
+import edu.tcu.cs.peerevalbackend.team.TeamRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +19,12 @@ import java.util.Map;
 @Transactional
 public class StudentService {
     private final StudentRepository studentRepository;
+    private final TeamRepository  teamRepository;
     private final IdWorker idWorker;
 
-    public StudentService(StudentRepository studentRepository, IdWorker idWorker){
+    public StudentService(StudentRepository studentRepository, TeamRepository teamRepository, IdWorker idWorker){
         this.studentRepository = studentRepository;
+        this.teamRepository = teamRepository;
         this.idWorker = idWorker;
     }
 
@@ -55,21 +60,21 @@ public class StudentService {
     public Page<Student> findByCriteria(Map<String, String> searchCriteria, Pageable pageable) {
         Specification<Student> spec = Specification.where(null);
 
-        if(StringUtils.hasLength(searchCriteria.get("academicYear"))){
+        if (StringUtils.hasLength(searchCriteria.get("academicYear"))) {
             spec = spec.and(StudentSpecs.hasAcademicYear(searchCriteria.get("academicYear")));
         }
-        if(StringUtils.hasLength(searchCriteria.get("firstName"))){
+        if (StringUtils.hasLength(searchCriteria.get("firstName"))) {
             spec = spec.and(StudentSpecs.containsFirstName(searchCriteria.get("firstName")));
         }
-        if(StringUtils.hasLength(searchCriteria.get("lastName"))){
+        if (StringUtils.hasLength(searchCriteria.get("lastName"))) {
             spec = spec.and(StudentSpecs.containsLastName(searchCriteria.get("lastName")));
         }
-        if(StringUtils.hasLength(searchCriteria.get("teamName"))){
+        if (StringUtils.hasLength(searchCriteria.get("teamName"))) {
             spec = spec.and(StudentSpecs.hasTeamName(searchCriteria.get("teamName")));
         }
-        if(StringUtils.hasLength(searchCriteria.get("sectionName"))){
+        if (StringUtils.hasLength(searchCriteria.get("sectionName"))) {
             spec = spec.and(StudentSpecs.hasSectionName(searchCriteria.get("sectionName")));
         }
         return this.studentRepository.findAll(spec, pageable);
-
+    }
 }
