@@ -67,6 +67,9 @@ public class StudentService {
         if(StringUtils.hasLength(searchCriteria.get("teamName"))){
             spec = spec.and(StudentSpecs.hasTeamName(searchCriteria.get("teamName")));
         }
+        if(StringUtils.hasLength(searchCriteria.get("sectionName"))){
+            spec = spec.and(StudentSpecs.hasSectionName(searchCriteria.get("sectionName")));
+        }
         return this.studentRepository.findAll(spec, pageable);
-    }
+
 }
