@@ -19,12 +19,10 @@ import java.util.Map;
 @Transactional
 public class StudentService {
     private final StudentRepository studentRepository;
-    private final TeamRepository  teamRepository;
     private final IdWorker idWorker;
 
-    public StudentService(StudentRepository studentRepository, TeamRepository teamRepository, IdWorker idWorker){
+    public StudentService(StudentRepository studentRepository, IdWorker idWorker){
         this.studentRepository = studentRepository;
-        this.teamRepository = teamRepository;
         this.idWorker = idWorker;
     }
 
