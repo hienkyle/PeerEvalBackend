@@ -16,8 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SectionServiceTest {
@@ -99,6 +98,87 @@ class SectionServiceTest {
         assertThat(savedSection.getAcademicYear()).isEqualTo(newSection.getAcademicYear());
         assertThat(savedSection.getFirstAndLastDate()).isEqualTo(newSection.getFirstAndLastDate());
         verify(sectionRepository, times(1)).save(newSection);
+    }
+
+    @Test
+    void testUpdateSuccess() {
+        //given
+        Section oldSection = new Section();
+        oldSection.setSectionName("Section 1");
+        oldSection.setAcademicYear("2023-2024");
+        oldSection.setFirstAndLastDate("8/21/23 and 5/01/24");
+
+        Section update  = new Section();
+        update.setSectionName("Section 1");
+        update.setAcademicYear("2023-2024");
+        update.setFirstAndLastDate("8/21/23 and 5/02/24"); //changed day from 01 to 02
+
+        //first find then update
+        given(sectionRepository.findById("Section 1")).willReturn(Optional.of(oldSection));
+        given(sectionRepository.save(oldSection)).willReturn(oldSection);
+
+        //when
+        Section updatedSection = sectionService.update("Section 1", update);
+
+        //then
+        assertThat(updatedSection.getSectionName()).isEqualTo(update.getSectionName());
+        assertThat(updatedSection.getAcademicYear()).isEqualTo(updatedSection.getAcademicYear());
+        verify(sectionRepository, times(1)).findById("Section 1");
+        verify(sectionRepository, times(1)).save(oldSection);
+    }
+
+    @Test
+    void testUpdateNotFound() {
+        //given
+        Section update  = new Section();
+        update.setSectionName("Section 1");
+        update.setAcademicYear("2023-2024");
+        update.setFirstAndLastDate("8/21/23 and 5/02/24"); //changed day from 01 to 02
+
+        given(sectionRepository.findById("Section 1")).willReturn(Optional.empty());
+
+        //when
+        assertThrows(ObjectNotFoundException.class, () -> {
+            sectionService.update("Section 1", update);
+        });
+
+        //then
+        verify(sectionRepository, times(1)).findById("Section 1");
+    }
+
+    @Test
+    void testDeleteSuccess() {
+        //given
+        Section section = new Section();
+        section.setSectionName("Section 1");
+        section.setAcademicYear("2023-2024");
+        section.setFirstAndLastDate("8/21/23 and 5/01/24");
+
+        given(sectionRepository.findById("Section 1")).willReturn(Optional.of(section));
+        doNothing().when(sectionRepository).deleteById("Section 1");
+
+        //when
+        sectionService.delete("Section 1");
+
+        //then
+        verify(sectionRepository, times(1)).deleteById("Section 1");
+
+    }
+
+    @Test
+    void testDeleteNotFound() {
+        //given
+        given(sectionRepository.findById("Section 1")).willReturn(Optional.empty());
+        doNothing().when(sectionRepository).deleteById("Section 1");
+
+        //when
+        assertThrows(ObjectNotFoundException.class, () -> {
+            sectionService.delete("Section 1");
+        });
+
+        //then
+        verify(sectionRepository, times(1)).findById("Section 1");
+
     }
 
 }
