@@ -21,5 +21,23 @@ public class SectionService {
     public Section save(Section newSection) {
         return this.sectionRepository.save(newSection);
 
+    }
+
+    public Section update(String sectionName, Section update) {
+        return this.sectionRepository.findById(sectionName)
+                .map(oldSection -> {
+                    oldSection.setSectionName((update.getSectionName()));
+                    oldSection.setAcademicYear(update.getAcademicYear());
+                    oldSection.setFirstAndLastDate((update.getFirstAndLastDate()));
+                    return this.sectionRepository.save(oldSection);
+                })
+                .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
+    }
+
+    public void delete(String sectionName) {
+        Section section = this.sectionRepository.findById(sectionName)
+            .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
+        this.sectionRepository.deleteById(sectionName);
+    }
 
 }

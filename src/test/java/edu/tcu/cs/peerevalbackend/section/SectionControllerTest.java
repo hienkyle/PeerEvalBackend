@@ -19,9 +19,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
@@ -117,6 +119,77 @@ class SectionControllerTest {
                 .andExpect(jsonPath("$.data.id").isNotEmpty())
                 .andExpect(jsonPath("$.data.academicYear").value(savedSection.getAcademicYear()))
                 .andExpect(jsonPath("$.data.firstAndLastDate").value(savedSection.getFirstAndLastDate()));
+    }
+
+    @Test
+    void testUpdateSectionSuccess() throws Exception {
+        //given
+        SectionDto sectionDto = new SectionDto("Section 2.5",
+                "2023-2024",
+                "8/21/23 and 5/01/24");
+
+        String json = this.objectMapper.writeValueAsString(sectionDto);
+
+        Section updatedSection = new Section();
+        updatedSection.setSectionName("Section 2.5");
+        updatedSection.setAcademicYear("2023-2024");
+        updatedSection.setFirstAndLastDate("8/21/23 and 5/01/24");
+
+        given(this.sectionService.update(eq("Section 2.5"), Mockito.any(Section.class))).willReturn(updatedSection);
+
+        //when & then
+        this.mockMvc.perform(put("/peerEval/section/Section 2.5").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Update Success"))
+                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.data.academicYear").value(updatedSection.getAcademicYear()))
+                .andExpect(jsonPath("$.data.firstAndLastDate").value(updatedSection.getFirstAndLastDate()));
+    }
+
+    @Test
+    void testUpdateSectionErrorWithNonExistingId() throws Exception {
+        //given
+        SectionDto sectionDto = new SectionDto("Section 2.5",
+                "2023-2024",
+                "8/21/23 and 5/01/24");
+
+        String json = this.objectMapper.writeValueAsString(sectionDto);
+
+        given(this.sectionService.update(eq("Section 2.5"), Mockito.any(Section.class))).willThrow(new ObjectNotFoundException("section", "Section 2.5"));
+
+        //when & then
+        this.mockMvc.perform(put("/peerEval/section/Section 2.5").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find section with Id Section 2.5 :("))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testDeleteSectionSuccess() throws Exception {
+        //given
+        doNothing().when(this.sectionService).delete("Section 1");
+
+        //when & then
+        this.mockMvc.perform(delete("/peerEval/section/Section 1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Delete Success"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testDeleteSectionErrorWithNonExistentId() throws Exception {
+        //given
+        doThrow(new ObjectNotFoundException("section", "Section 1")).when(this.sectionService).delete("Section 1");
+
+        //when & then
+        this.mockMvc.perform(delete("/peerEval/section/Section 1").accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find section with Id Section 1 :("))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 
 }
