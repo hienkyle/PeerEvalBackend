@@ -55,17 +55,20 @@ public class StudentService {
     public Page<Student> findByCriteria(Map<String, String> searchCriteria, Pageable pageable) {
         Specification<Student> spec = Specification.where(null);
 
-        if(StringUtils.hasLength(searchCriteria.get("academicYear"))){
+        if (StringUtils.hasLength(searchCriteria.get("academicYear"))) {
             spec = spec.and(StudentSpecs.hasAcademicYear(searchCriteria.get("academicYear")));
         }
-        if(StringUtils.hasLength(searchCriteria.get("firstName"))){
+        if (StringUtils.hasLength(searchCriteria.get("firstName"))) {
             spec = spec.and(StudentSpecs.containsFirstName(searchCriteria.get("firstName")));
         }
-        if(StringUtils.hasLength(searchCriteria.get("lastName"))){
+        if (StringUtils.hasLength(searchCriteria.get("lastName"))) {
             spec = spec.and(StudentSpecs.containsLastName(searchCriteria.get("lastName")));
         }
-        if(StringUtils.hasLength(searchCriteria.get("teamName"))){
+        if (StringUtils.hasLength(searchCriteria.get("teamName"))) {
             spec = spec.and(StudentSpecs.hasTeamName(searchCriteria.get("teamName")));
+        }
+        if (StringUtils.hasLength(searchCriteria.get("sectionName"))) {
+            spec = spec.and(StudentSpecs.hasSectionName(searchCriteria.get("sectionName")));
         }
         return this.studentRepository.findAll(spec, pageable);
     }

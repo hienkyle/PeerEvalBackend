@@ -1,6 +1,5 @@
 package edu.tcu.cs.peerevalbackend.student;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import edu.tcu.cs.peerevalbackend.peereval.PeerEvalReport;
 import edu.tcu.cs.peerevalbackend.section.Section;
 import edu.tcu.cs.peerevalbackend.team.Team;
@@ -48,10 +47,8 @@ public class Student {
         
     }
     public void assignToTeam(Team team){
-        this.team =  team;
-        List<Student> currentStudents = team.getStudents();
-        currentStudents.add(this);
-        team.setStudents(currentStudents);
+        this.team.addStudent(this);
+        this.team = team;
     }
     public void addWar(WeeklyActivityReport war){
         war.setAuthor(this);
