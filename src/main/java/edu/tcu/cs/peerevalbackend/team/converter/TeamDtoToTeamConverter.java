@@ -50,7 +50,6 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
         }
 
         if(source.sectionDto() != null) {
-                    kjn     b gggfgh
         }
 
 //
