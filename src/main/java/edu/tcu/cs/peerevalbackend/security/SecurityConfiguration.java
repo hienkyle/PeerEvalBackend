@@ -64,7 +64,11 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/artifacts/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/instructors/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, this.baseUrl + "instructors/search").permitAll()
+                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/section/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/teams/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, this.baseUrl + "/student/**").permitAll()
                         .requestMatchers(HttpMethod.GET, this.baseUrl + "/users/**").hasAuthority("ROLE_admin") // protect the endpoint
                         .requestMatchers(HttpMethod.POST, this.baseUrl + "/users").hasAuthority("ROLE_admin") // protect the endpoint
                         .requestMatchers(HttpMethod.PUT, this.baseUrl + "/users/**").hasAuthority("ROLE_admin") // protect the endpoint
