@@ -51,13 +51,26 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-		<!-- dependency I added -->
-<!--		<dependency>-->
-<!--			<groupId>jakarta.validation</groupId>-->
-<!--			<artifactId>jakarta.validation-api</artifactId>-->
-<!--		</dependency>-->
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+			<!--            <version>3.2.4</version>-->
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-resource-server -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+			<!--            <version>3.2.4</version>-->
+		</dependency>
+
+		<!-- dependency I added -->
+		<!--		<dependency>-->
+		<!--			<groupId>jakarta.validation</groupId>-->
+		<!--			<artifactId>jakarta.validation-api</artifactId>-->
+		<!--		</dependency>-->
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
