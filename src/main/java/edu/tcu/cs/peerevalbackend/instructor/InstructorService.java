@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevalbackend.instructor;
 
+import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class InstructorService {
     public Instructor deactivate(String instructorId, String reason) {
         return this.instructorRepository.findById(instructorId)
                 .map(activeInstructor -> {
-                    activeInstructor.setStatus("deactivated");
+                    activeInstructor.setStatus(ActiveStatus.IS_DEACTIVATED);
                     activeInstructor.setDeactivateReason(reason);
                     return this.instructorRepository.save(activeInstructor);
                 })
@@ -71,7 +72,7 @@ public class InstructorService {
     public Instructor reactivate(String instructorId) {
         return this.instructorRepository.findById(instructorId)
                 .map(deactivatedInstructor -> {
-                    deactivatedInstructor.setStatus("active");
+                    deactivatedInstructor.setStatus(ActiveStatus.IS_ACTIVE);
                     return this.instructorRepository.save(deactivatedInstructor);
                 })
                 .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));

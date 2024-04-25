@@ -1,6 +1,7 @@
 package edu.tcu.cs.peerevalbackend.instructor;
 
 import edu.tcu.cs.peerevalbackend.section.Section;
+import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.team.Team;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,7 +21,9 @@ public class Instructor implements Serializable {
 
     private String name;
 
-    private String status;
+    private String academicYear;
+
+    private ActiveStatus status;
 
     private String password;
 
@@ -53,11 +56,19 @@ public class Instructor implements Serializable {
         this.name = name;
     }
 
-    public String getStatus() {
+    public String getAcademicYear() {
+        return academicYear;
+    }
+
+    public void setAcademicYear(String academicYear) {
+        this.academicYear = academicYear;
+    }
+
+    public ActiveStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ActiveStatus status) {
         this.status = status;
     }
 

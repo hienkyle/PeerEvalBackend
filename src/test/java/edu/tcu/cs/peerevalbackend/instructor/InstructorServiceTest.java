@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevalbackend.instructor;
 
+import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class InstructorServiceTest {
         i1.setName("alvie");
         i1.setPassword("123456");
         i1.setSections(null);
-        i1.setStatus("active");
+        i1.setStatus(ActiveStatus.IS_ACTIVE);
         i1.setDeactivateReason(null);
         i1.setTeams(null);
 
@@ -46,7 +47,7 @@ class InstructorServiceTest {
         i2.setName("ana");
         i2.setPassword("123456");
         i2.setSections(null);
-        i2.setStatus("active");
+        i2.setStatus(ActiveStatus.IS_ACTIVE);
         i2.setDeactivateReason(null);
         i2.setTeams(null);
 
@@ -55,7 +56,7 @@ class InstructorServiceTest {
         i3.setName("maribel");
         i3.setPassword("123456");
         i3.setSections(null);
-        i3.setStatus("active");
+        i3.setStatus(ActiveStatus.IS_DEACTIVATED);
         i3.setDeactivateReason(null);
         i3.setTeams(null);
 
@@ -76,7 +77,7 @@ class InstructorServiceTest {
         i.setName("alvie");
         i.setPassword("123456");
         i.setSections(null);
-        i.setStatus("active");
+        i.setStatus(ActiveStatus.IS_ACTIVE);
         i.setDeactivateReason(null);
         i.setTeams(null);
 

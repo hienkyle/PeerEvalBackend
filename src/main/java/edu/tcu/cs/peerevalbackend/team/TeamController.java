@@ -1,6 +1,7 @@
 package edu.tcu.cs.peerevalbackend.team;
 
 import edu.tcu.cs.peerevalbackend.system.Result;
+import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import edu.tcu.cs.peerevalbackend.team.converter.TeamDtoToTeamConverter;
 import edu.tcu.cs.peerevalbackend.team.converter.TeamToTeamDtoConverter;
 import edu.tcu.cs.peerevalbackend.team.dto.TeamDto;
@@ -86,9 +87,9 @@ public class TeamController {
      * Order of parameters matters
      * Whatever is in {} will be assigned to parameters, which is why order matters
      */
-    @PutMapping("/{teamName}/students/{studentName}")
-    public Result assignStudent(@PathVariable String teamName, @PathVariable String studentName) {
-        this.teamService.assignStudent(teamName, studentName);
+    @PutMapping("/{teamName}/students/{studentId}")
+    public Result assignStudent(@PathVariable String teamName, @PathVariable Integer studentId) {
+        this.teamService.assignStudent(teamName, studentId);
         return new Result(true, StatusCode.SUCCESS, "Student Assignment Success");
     }
 
@@ -96,9 +97,9 @@ public class TeamController {
      * Use case 14
      * Make sure the annotation is correct
      */
-    @PutMapping("/{teamName}/students/{studentName}")
-    public Result removeStudent(@PathVariable String teamName, @PathVariable String studentName) {
-        this.teamService.removeStudent(teamName, studentName);
+    @PutMapping("/{teamName}/students/{studentId}")
+    public Result removeStudent(@PathVariable String teamName, @PathVariable Integer studentId) {
+        this.teamService.removeStudent(teamName, studentId);
         return new Result(true, StatusCode.SUCCESS, "Remove Student Success");
     }
 
@@ -108,9 +109,9 @@ public class TeamController {
      * Order of parameters matters
      * Whatever is in {} will be assigned to parameters, which is why order matters
      */
-    @PutMapping("/{teamName}/instructors/{instructorName}")
-    public Result assignInstructor(@PathVariable String teamName, @PathVariable String instructorName) {
-        this.teamService.assignInstructor(teamName, instructorName);
+    @PutMapping("/{teamName}/instructors/{instructorId}")
+    public Result assignInstructor(@PathVariable String teamName, @PathVariable String instructorId) {
+        this.teamService.assignInstructor(teamName, instructorId);
         return new Result(true, StatusCode.SUCCESS, "Instructor Assignment Success");
     }
 
@@ -118,9 +119,9 @@ public class TeamController {
      * Use case 20
      * Make sure the annotation is correct
      */
-    @PutMapping("/{teamName}/instructors/{instructorName}")
-    public Result removeInstructor(@PathVariable String teamName, @PathVariable String instructorName) {
-        this.teamService.removeInstructor(teamName, instructorName);
+    @PutMapping("/{teamName}/instructors/{instructorId}")
+    public Result removeInstructor(@PathVariable String teamName, @PathVariable String instructorId) {
+        this.teamService.removeInstructor(teamName, instructorId);
         return new Result(true, StatusCode.SUCCESS, "Remove Instructor Success");
     }
 

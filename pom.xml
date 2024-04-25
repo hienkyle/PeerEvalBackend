@@ -63,6 +63,12 @@
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 			<!--            <version>3.2.4</version>-->
 		</dependency>
+
+		<!-- dependency I added -->
+		<!--		<dependency>-->
+		<!--			<groupId>jakarta.validation</groupId>-->
+		<!--			<artifactId>jakarta.validation-api</artifactId>-->
+		<!--		</dependency>-->
 	</dependencies>
 
 	<build>
