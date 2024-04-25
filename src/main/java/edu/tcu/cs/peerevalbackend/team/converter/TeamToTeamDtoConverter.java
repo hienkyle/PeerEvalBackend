@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevalbackend.team.converter;
 
+import edu.tcu.cs.peerevalbackend.section.converter.SectionToSectionDtoConverter;
 import edu.tcu.cs.peerevalbackend.team.Team;
 import edu.tcu.cs.peerevalbackend.team.dto.TeamDto;
 import org.springframework.core.convert.converter.Converter;
