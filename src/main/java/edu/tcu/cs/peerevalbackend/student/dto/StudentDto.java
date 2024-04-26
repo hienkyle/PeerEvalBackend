@@ -9,9 +9,9 @@ public record StudentDto(
     String firstName,
     String middleInitial,
     String lastName,
-    SectionDto section,
     String academicYear,
     Integer numberOfWars,
-    TeamDto team
+    String teamName,
+    String sectionName
     )
 {}

@@ -50,6 +50,12 @@ public class Student {
         this.team.addStudent(this);
         this.team = team;
     }
+    public String getTeamName(){
+        return this.team.getTeamName();
+    }
+    public String getSectionName(){
+        return this.section.getSectionName();
+    }
     public void addWar(WeeklyActivityReport war){
         war.setAuthor(this);
         this.wars.add(war);

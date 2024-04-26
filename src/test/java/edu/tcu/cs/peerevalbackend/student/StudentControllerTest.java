@@ -122,7 +122,7 @@ public class StudentControllerTest {
     }
     @Test
     void testAddStudentSuccess() throws Exception {
-        StudentDto studentDto = new StudentDto(null, "Mason", "D","OConnor",null, "2024", 15, null);
+        StudentDto studentDto = new StudentDto(null, "Mason", "D","OConnor", "2024", 15, "team","section");
 
         String json = this.objectMapper.writeValueAsString(studentDto);
 
@@ -143,7 +143,7 @@ public class StudentControllerTest {
     }
     @Test
     void testUpdateStudentSuccess() throws Exception {
-        StudentDto studentDto = new StudentDto(null, "Mason", "d","OConnor",null, "2024",15,null);
+        StudentDto studentDto = new StudentDto(null, "Mason", "D","OConnor", "2024", 15, "team","section");
 
         Student updatedStudent = new Student();
         updatedStudent.setStudentId(1);
@@ -167,7 +167,7 @@ public class StudentControllerTest {
         // Given.
         given(this.studentService.updateStudent(eq(5), Mockito.any(Student.class))).willThrow(new StudentNotFoundException(5));
 
-        StudentDto studentDto = new StudentDto(5, "Mason", "D","OConnor",null, "2024", 15, null);
+        StudentDto studentDto = new StudentDto(5, "Mason", "D","OConnor", "2024", 15, "team","section");
 
         String json = this.objectMapper.writeValueAsString(studentDto);
 

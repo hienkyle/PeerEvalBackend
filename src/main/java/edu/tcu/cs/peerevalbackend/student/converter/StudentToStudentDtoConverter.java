@@ -25,13 +25,13 @@ public class StudentToStudentDtoConverter implements Converter<Student, StudentD
                 source.getFirstName(),
                 source.getMiddleInitial(),
                 source.getLastName(),
-                source.getSection() != null
-                        ? this.sectionToSectionDtoConverter.convert(source.getSection())
-                        : null,
                 source.getAcademicYear(),
                 source.getNumberOfWars(),
                 source.getTeam() != null
-                        ? this.teamToTeamDtoConverter.convert(source.getTeam())
+                        ? source.getTeamName()
+                        : null,
+                source.getSection() != null
+                        ? source.getSectionName()
                         : null);
         return studentDto;
     }
