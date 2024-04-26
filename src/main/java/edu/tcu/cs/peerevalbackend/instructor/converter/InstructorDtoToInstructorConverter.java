@@ -5,7 +5,6 @@ import edu.tcu.cs.peerevalbackend.instructor.dto.InstructorDto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-@Component
 public class InstructorDtoToInstructorConverter implements Converter<InstructorDto, Instructor> {
     @Override
     public Instructor convert(InstructorDto source) {
