@@ -49,6 +49,9 @@ class SectionServiceTest {
         s.setSectionName("Section 1");
         s.setAcademicYear("2023-2024");
         s.setFirstAndLastDate("8/21/23 and 5/01/24");
+        s.setTeams(null);
+        s.setInstructors(null);
+        s.setStudents(null);
 
         //know what it returns before u mock
         given(sectionRepository.findById("Section 1")).willReturn(Optional.of(s));
@@ -60,6 +63,9 @@ class SectionServiceTest {
         assertThat(returnedSection.getSectionName()).isEqualTo(s.getSectionName());
         assertThat(returnedSection.getAcademicYear()).isEqualTo(s.getAcademicYear());
         assertThat(returnedSection.getFirstAndLastDate()).isEqualTo(s.getFirstAndLastDate());
+        assertThat(returnedSection.getTeams()).isEqualTo(s.getTeams());
+        assertThat(returnedSection.getInstructors()).isEqualTo(s.getInstructors());
+        assertThat(returnedSection.getStudents()).isEqualTo(s.getStudents());
         verify(sectionRepository, times(1)).findById("Section 1");
     }
 
@@ -87,6 +93,9 @@ class SectionServiceTest {
         newSection.setSectionName("Section New-Section");
         newSection.setAcademicYear("2023-2024");
         newSection.setFirstAndLastDate("8/21/23 and 5/01/24");
+        newSection.setTeams(null);
+        newSection.setInstructors(null);
+        newSection.setStudents(null);
 
         given(sectionRepository.save(newSection)).willReturn(newSection);
 
@@ -97,6 +106,9 @@ class SectionServiceTest {
         assertThat(savedSection.getSectionName()).isEqualTo(newSection.getSectionName());
         assertThat(savedSection.getAcademicYear()).isEqualTo(newSection.getAcademicYear());
         assertThat(savedSection.getFirstAndLastDate()).isEqualTo(newSection.getFirstAndLastDate());
+        assertThat(savedSection.getTeams()).isEqualTo(newSection.getTeams());
+        assertThat(savedSection.getInstructors()).isEqualTo(newSection.getInstructors());
+        assertThat(savedSection.getStudents()).isEqualTo(newSection.getStudents());
         verify(sectionRepository, times(1)).save(newSection);
     }
 
@@ -107,11 +119,17 @@ class SectionServiceTest {
         oldSection.setSectionName("Section 1");
         oldSection.setAcademicYear("2023-2024");
         oldSection.setFirstAndLastDate("8/21/23 and 5/01/24");
+        oldSection.setTeams(null);
+        oldSection.setInstructors(null);
+        oldSection.setStudents(null);
 
         Section update  = new Section();
         update.setSectionName("Section 1");
         update.setAcademicYear("2023-2024");
         update.setFirstAndLastDate("8/21/23 and 5/02/24"); //changed day from 01 to 02
+        update.setTeams(null);
+        update.setInstructors(null);
+        update.setStudents(null);
 
         //first find then update
         given(sectionRepository.findById("Section 1")).willReturn(Optional.of(oldSection));
@@ -123,6 +141,7 @@ class SectionServiceTest {
         //then
         assertThat(updatedSection.getSectionName()).isEqualTo(update.getSectionName());
         assertThat(updatedSection.getAcademicYear()).isEqualTo(updatedSection.getAcademicYear());
+        assertThat(updatedSection.getFirstAndLastDate()).isEqualTo(updatedSection.getFirstAndLastDate());
         verify(sectionRepository, times(1)).findById("Section 1");
         verify(sectionRepository, times(1)).save(oldSection);
     }
@@ -134,6 +153,9 @@ class SectionServiceTest {
         update.setSectionName("Section 1");
         update.setAcademicYear("2023-2024");
         update.setFirstAndLastDate("8/21/23 and 5/02/24"); //changed day from 01 to 02
+        update.setTeams(null);
+        update.setInstructors(null);
+        update.setStudents(null);
 
         given(sectionRepository.findById("Section 1")).willReturn(Optional.empty());
 
@@ -153,6 +175,9 @@ class SectionServiceTest {
         section.setSectionName("Section 1");
         section.setAcademicYear("2023-2024");
         section.setFirstAndLastDate("8/21/23 and 5/01/24");
+        section.setTeams(null);
+        section.setInstructors(null);
+        section.setStudents(null);
 
         given(sectionRepository.findById("Section 1")).willReturn(Optional.of(section));
         doNothing().when(sectionRepository).deleteById("Section 1");
