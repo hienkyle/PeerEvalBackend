@@ -2,6 +2,7 @@ package edu.tcu.cs.peerevalbackend.team.converter;
 
 import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.section.Section;
+import edu.tcu.cs.peerevalbackend.section.converter.SectionDtoToSectionConverter;
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.student.converter.StudentDtoToStudentConverter;
 import edu.tcu.cs.peerevalbackend.team.Team;
@@ -17,10 +18,12 @@ import java.util.List;
 public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
     private final InstructorDtoToInstructorConverter instructorDtoToInstructorConverter;
     private final StudentDtoToStudentConverter studentDtoToStudentConverter;
+    private final SectionDtoToSectionConverter sectionDtoToSectionConverter;
 
-    public TeamDtoToTeamConverter(InstructorDtoToInstructorConverter instructorDtoToInstructorConverter, StudentDtoToStudentConverter studentDtoToStudentConverter) {
+    public TeamDtoToTeamConverter(InstructorDtoToInstructorConverter instructorDtoToInstructorConverter, StudentDtoToStudentConverter studentDtoToStudentConverter, SectionDtoToSectionConverter sectionDtoToSectionConverter) {
         this.instructorDtoToInstructorConverter = instructorDtoToInstructorConverter;
         this.studentDtoToStudentConverter = studentDtoToStudentConverter;
+        this.sectionDtoToSectionConverter = sectionDtoToSectionConverter;
     }
 
     /*
@@ -50,6 +53,7 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
         }
 
         if(source.sectionDto() != null) {
+            team.setSectionName(sectionDtoToSectionConverter.convert(source.sectionDto()));
         }
 
         return team;
