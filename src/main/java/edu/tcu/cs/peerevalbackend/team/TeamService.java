@@ -3,6 +3,8 @@ package edu.tcu.cs.peerevalbackend.team;
 import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.instructor.InstructorRepository;
 import edu.tcu.cs.peerevalbackend.student.Student;
+import edu.tcu.cs.peerevalbackend.student.StudentRepository;
+import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -84,10 +86,10 @@ public class TeamService {
     * Use case 12
     * Make sure to fix these errors
     */
-    public void assignStudent(String teamName, String studentName){
+    public void assignStudent(String teamName, Integer studentId){
         //Find this student by student name (which is the ID per se) from database
-        Student studentToBeAssigned = this.studentRepository.findById(studentName)
-                .orElseThrow(() -> new StudentNotFoundException(studentName));
+        Student studentToBeAssigned = this.studentRepository.findById(studentId)
+                .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
 
         //Find this team by team name from DB
         Team teamAssigned = this.teamRepository.findById(teamName)
@@ -95,8 +97,8 @@ public class TeamService {
 
         //Student assignment
         //This removes student from current team, if any, in order to reassign
-        if (studentToBeAssigned.getTeamName() != null) {
-            studentToBeAssigned.getTeamName().removeStudent(studentToBeAssigned);
+        if (studentToBeAssigned.getTeam() != null) {
+            studentToBeAssigned.getTeam().removeStudent(studentToBeAssigned);
         }
 
         teamAssigned.addStudent(studentToBeAssigned);
@@ -106,18 +108,18 @@ public class TeamService {
      * Do I need this or does the method in Team class suffice?
      * Use case 13
      */
-    public void removeStudent(String teamName, String studentName) {
+    public void removeStudent(String teamName, Integer studentId) {
         //Find this student by student name (which is the ID per se) from database
-        Student studentToBeAssigned = this.studentRepository.findById(studentName)
-                .orElseThrow(() -> new StudentNotFoundException(studentName));
+        Student studentToBeDeleted = this.studentRepository.findById(studentId)
+                .orElseThrow(() -> new ObjectNotFoundException("student", studentId));
 
         //Find this team by team name from DB
         Team teamWhereStuDel = this.teamRepository.findById(teamName)
                 .orElseThrow(() -> new TeamNotFoundException(teamName));
 
         //Check if the student is in a team and remove
-        if (studentToBeAssigned.getTeamName() != null) {
-            studentToBeAssigned.getTeamName().removeStudent(studentToBeAssigned);
+        if (studentToBeDeleted.getTeam() != null) {
+            studentToBeDeleted.getTeam().removeStudent(studentToBeDeleted);
         }
     }
 
@@ -125,20 +127,14 @@ public class TeamService {
      * Use case 19
      * Make sure to fix these errors
      */
-    public void assignInstructor(String teamName, String instructorName){
+    public void assignInstructor(String teamName, String instructorId){
         //Find this instructor by instructor name (which is the ID per se) from database
-        Instructor instructorToBeAssigned = this.instructorRepository.findById(instructorName)
-                .orElseThrow(() -> new InstructorNotFoundException(instructorName));
+        Instructor instructorToBeAssigned = this.instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
 
         //Find this team by team name from DB
         Team teamAssigned = this.teamRepository.findById(teamName)
                 .orElseThrow(() -> new TeamNotFoundException(teamName));
-
-        //Instructor assignment
-        //This removes instructor from current team, if any, in order to reassign
-        if (instructorToBeAssigned.getTeamName() != null) {
-            instructorToBeAssigned.getTeamName().removeInstructor(instructorToBeAssigned);
-        }
 
         teamAssigned.addInstructor(instructorToBeAssigned);
     }
@@ -147,18 +143,18 @@ public class TeamService {
      * Do I need this or does the method in Team class suffice?
      * Use case 20
      */
-    public void removeInstructor(String teamName, String instructorName) {
+    public void removeInstructor(String teamName, String instructorId) {
         //Find this instructor by instructor name (which is the ID per se) from database
-        Instructor instructorToBeAssigned = this.instructorRepository.findById(instructorName)
-                .orElseThrow(() -> new InstructorNotFoundException(instructorName));
+        Instructor instructorToBeDeleted = this.instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
 
         //Find this team by team name from DB
         Team teamWhereStuDel = this.teamRepository.findById(teamName)
                 .orElseThrow(() -> new TeamNotFoundException(teamName));
 
         //Check if the instructor is in a team, and remove
-        if (instructorToBeAssigned.getTeamName() != null) {
-            instructorToBeAssigned.getTeamName().removeInstructor(instructorToBeAssigned);
+        if(instructorToBeDeleted.getTeams().contains(teamWhereStuDel)) {
+            teamWhereStuDel.removeInstructor(instructorToBeDeleted);
         }
     }
 

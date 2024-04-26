@@ -119,7 +119,7 @@ public class Team implements Serializable {
     * For use case 12
     */
     public void addStudent(Student student) {
-        student.setTeamName(this);
+        student.setTeam(this);
         this.students.add(student);
     }
 
@@ -131,7 +131,7 @@ public class Team implements Serializable {
      * For use case 19
      */
     public void addInstructor(Instructor instructor) {
-        instructor.setTeamName(this);
+        instructor.addTeam(this);
         this.instructors.add(instructor);
     }
 
@@ -150,13 +150,13 @@ public class Team implements Serializable {
     */
     public void removeAllStudents() {
         //Iterate through list of students in a team and set team to null
-        this.students.stream().forEach(student -> student.setTeamName(null));
+        this.students.stream().forEach(student -> student.setTeam(null));
         this.students = new ArrayList<>();
     }
 
     public void removeAllInstructors() {
         //Iterate through list of instructors in a team and set team to null
-        this.instructors.stream().forEach(instructor -> instructor.setTeamName(null));
+        this.instructors.stream().forEach(instructor -> instructor.removeTeam(this));
         this.instructors = new ArrayList<>();
     }
 
@@ -165,7 +165,7 @@ public class Team implements Serializable {
     */
     public void removeStudent(Student studentToBeAssigned) {
         //Remove specific student from team
-        studentToBeAssigned.setTeamName(null);
+        studentToBeAssigned.setTeam(null);
         this.students.remove(studentToBeAssigned);
     }
 
@@ -174,7 +174,7 @@ public class Team implements Serializable {
     */
     public void removeInstructor(Instructor instructorToBeAssigned) {
         //Remove specific instructor from team
-        instructorToBeAssigned.setTeamName(null);
+        instructorToBeAssigned.removeTeam(this);
         this.instructors.remove(instructorToBeAssigned);
     }
 }

@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevalbackend.instructor.dto;
 
+import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.team.dto.TeamDto;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -17,7 +18,7 @@ public record InstructorDto(String instructorId,
                             @NotEmpty(message = "name is required.")
                             String name,
                             @NotEmpty(message = "status is required.")
-                            String status,
+                            ActiveStatus status,
                             List<TeamDto> teamDtos
                             ){
 }

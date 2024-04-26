@@ -1,8 +1,15 @@
 package edu.tcu.cs.peerevalbackend.instructor;
 
+import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 @Service
 @Transactional
@@ -48,7 +55,7 @@ public class InstructorService {
     public Instructor deactivate(String instructorId, String reason) {
         return this.instructorRepository.findById(instructorId)
                 .map(activeInstructor -> {
-                    activeInstructor.setStatus("deactivated");
+                    activeInstructor.setStatus(ActiveStatus.IS_DEACTIVATED);
                     activeInstructor.setDeactivateReason(reason);
                     return this.instructorRepository.save(activeInstructor);
                 })
@@ -71,9 +78,39 @@ public class InstructorService {
     public Instructor reactivate(String instructorId) {
         return this.instructorRepository.findById(instructorId)
                 .map(deactivatedInstructor -> {
-                    deactivatedInstructor.setStatus("active");
+                    deactivatedInstructor.setStatus(ActiveStatus.IS_ACTIVE);
                     return this.instructorRepository.save(deactivatedInstructor);
                 })
                 .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
+    }
+
+    /*
+     * Use case 18: Search for instructors using criteria
+     *
+     * Name: Hien
+     *
+     * @param searchCriteria- attributes and their search values
+     * @param pageable
+     *
+     * @return Page<Instructor>
+     *
+     * Note: NOT TESTED
+     */
+    public Page<Instructor> findByCriteria(Map<String, String> searchCriteria, Pageable pageable) {
+        Specification<Instructor> spec = Specification.where(null);
+
+        if(StringUtils.hasLength(searchCriteria.get("name"))){
+            spec = spec.and(InstructorSpecs.containsName(searchCriteria.get("name")));
+        }
+
+        if(StringUtils.hasLength(searchCriteria.get("academicYear"))){
+            spec = spec.and(InstructorSpecs.hasYear(searchCriteria.get("academicYear")));
+        }
+
+        if(StringUtils.hasLength(searchCriteria.get("status"))){
+            spec = spec.and(InstructorSpecs.hasStatus(searchCriteria.get("status")));
+        }
+
+        return this.instructorRepository.findAll(spec, pageable);
     }
 }

@@ -5,7 +5,11 @@ import edu.tcu.cs.peerevalbackend.instructor.dto.InstructorDto;
 import edu.tcu.cs.peerevalbackend.system.Result;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url}/instructors")
@@ -24,9 +28,23 @@ public class InstructorController {
 //        return null;
 //    }
 
-    @GetMapping() // figure what to map this thing to
-    public Result findInstructors(){
-        return null;
+    /*
+     * Use case 18: Search for instructors using criteria
+     *
+     * Name: Hien
+     *
+     * @param searchCriteria - a map that contains attributes and their search value
+     * @param pageable
+     *
+     * @return Result
+     *
+     * Note: NOT TESTED
+     */
+    @PostMapping("/search")
+    public Result findInstructorsByCriteria(@RequestBody Map<String, String> searchCriteria, Pageable pageable){
+        Page<Instructor> instructorPage = this.instructorService.findByCriteria(searchCriteria, pageable);
+        Page<InstructorDto> instructorDtoPage = instructorPage.map(instructor -> this.instructorToInstructorDtoConverter.convert(instructor));
+        return new Result(true, StatusCode.SUCCESS, "Search Success", instructorDtoPage);
     }
 
     /*
@@ -83,4 +101,6 @@ public class InstructorController {
         InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert(reactivatedInstructor);
         return new Result(true, StatusCode.SUCCESS, "Reactivate Success", instructorDto);
     }
+
+
 }
