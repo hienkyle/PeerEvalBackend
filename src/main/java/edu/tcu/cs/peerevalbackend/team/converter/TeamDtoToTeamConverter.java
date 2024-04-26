@@ -34,7 +34,7 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
         team.setAcademicYear(source.academicYear());
 
         List<Instructor> instructors = new ArrayList<>();
-        if(!source.instructorDtos().isEmpty() || source.instructorDtos() != null) {
+        if(!source.instructorDtos().isEmpty()) {
             for(int i = 0; i < source.instructorDtos().size(); i++) {
                 instructors.add(instructorDtoToInstructorConverter.convert(source.instructorDtos().get(i)));
             }
@@ -42,7 +42,7 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
         }
 
         List<Student> students = new ArrayList<>();
-        if(!source.studentDtos().isEmpty() || source.studentDtos() != null) {
+        if(!source.studentDtos().isEmpty()) {
             for(int i = 0; i < source.studentDtos().size(); i++) {
                 students.add(studentDtoToStudentConverter.convert(source.studentDtos().get(i)));
             }
@@ -52,14 +52,6 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
         if(source.sectionDto() != null) {
         }
 
-//
-//        team.setSectionName(source.sectionName());
-
         return team;
     }
 }
-/*
-* source.getOwner() != null
-                ? this.wizardToWizardDtoConverter.convert(source.getOwner())
-                : null);
-* */
