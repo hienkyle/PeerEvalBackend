@@ -1,5 +1,7 @@
 package edu.tcu.cs.peerevalbackend.section;
 
+import edu.tcu.cs.peerevalbackend.instructor.Instructor;
+import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.team.Team;
 import jakarta.persistence.*;
 
@@ -22,6 +24,12 @@ public class Section implements Serializable {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "sectionName")
     private List<Team> teams;
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "instructorId")
+    private List<Instructor> instructors;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "studentId")
+    private List<Student> students;
+
     //@ManyToOne
     //private Rubric rubricName;
 
@@ -30,12 +38,6 @@ public class Section implements Serializable {
     @CollectionTable(name = "section_active_weeks", joinColumns = @JoinColumn(name = "section_name"))
     @Column(name = "active_week")
     private List<Date> activeWeeks;
-
-    //@OneToMany({CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "instructor.name??")
-    //private List<Instructor> instructors;
-
-    //@OneToMany({CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "student.name??")
-    //private List<Student> students;
 
     public Section() {
     }
@@ -72,6 +74,22 @@ public class Section implements Serializable {
         this.teams = teams;
     }
 
+    public List<Instructor> getInstructors() {
+        return instructors;
+    }
+
+    public void setInstructors(List<Instructor> instructors) {
+        this.instructors = instructors;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
     //public Rubric getRubricName() {
     //    return rubricName;
     //}
@@ -94,19 +112,4 @@ public class Section implements Serializable {
     //    this.activeWeeks = activeWeeks;
     //}
 
-    //public List<Instructor> getInstructors() {
-    //    return instructors;
-    //}
-
-    //public void setInstructors(List<Instructor> instructors) {
-    //    this.instructors = instructors;
-    //}
-
-    //public List<Student> getStudents() {
-    //    return students;
-    //}
-
-    //public void setStudents(List<Student> students) {
-    //    //this.students = students;
-    //}
 }

@@ -2,9 +2,12 @@ package edu.tcu.cs.peerevalbackend.section;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.section.dto.SectionDto;
+import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
+import edu.tcu.cs.peerevalbackend.team.Team;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,14 +45,22 @@ class SectionControllerTest {
 
     List<Section> sections;
 
+    List<Team> teams;
+
+    List<Instructor> instructors;
+
+    List<Student> students;
+
     @BeforeEach
     void setUp() {
+        //section set up
         this.sections = new ArrayList<>();
 
         Section s1 = new Section();
         s1.setSectionName("Section 1");
         s1.setAcademicYear("2023-2024");
         s1.setFirstAndLastDate("8/21/23 and 5/01/24");
+
         this.sections.add(s1);
 
         Section s2 = new Section();
@@ -63,6 +74,88 @@ class SectionControllerTest {
         s3.setAcademicYear("2023-2024");
         s3.setFirstAndLastDate("8/21/23 and 5/01/24");
         this.sections.add(s3);
+
+        //team set up
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2023-2024");
+        team1.setSectionName(null);
+        team1.setInstructors(null);
+        this.teams.add(team1);
+
+        Team team2 = new Team();
+        team2.setTeamName("Team 2");
+        team2.setAcademicYear("2023-2024");
+        team2.setSectionName(null);
+        team2.setInstructors(null);
+        this.teams.add(team2);
+
+        Team team3 = new Team();
+        team3.setTeamName("Team 3");
+        team3.setAcademicYear("2023-2024");
+        team3.setSectionName(null);
+        team3.setInstructors(null);
+        this.teams.add(team3);
+
+        //instructor set up
+        Instructor i1 = new Instructor();
+        i1.setInstructorId("1");
+        i1.setName("alvie");
+        i1.setPassword("123456");
+        i1.setSections(null);
+        //i1.setStatus("active");
+        i1.setDeactivateReason(null);
+        i1.setTeams(null);
+        instructors.add(i1);
+
+        Instructor i2 = new Instructor();
+        i2.setInstructorId("2");
+        i2.setName("ana");
+        i2.setPassword("123456");
+        i2.setSections(null);
+       // i2.setStatus("active");
+        i2.setDeactivateReason(null);
+        i2.setTeams(null);
+        instructors.add(i2);
+
+        Instructor i3 = new Instructor();
+        i3.setInstructorId("3");
+        i3.setName("maribel");
+        i3.setPassword("123456");
+        i3.setSections(null);
+       // i3.setStatus("active");
+        i3.setDeactivateReason(null);
+        i3.setTeams(null);
+        instructors.add(i3);
+
+        //student set up
+        this.students = new ArrayList<>();
+        Student stu1 = new Student();
+        stu1.setStudentId(1);
+        stu1.setFirstName("Mason");
+        stu1.setMiddleInitial("D");
+        stu1.setLastName("OConnor");
+        stu1.setAcademicYear("2024");
+        stu1.setPassword("12345");
+        this.students.add(stu1);
+
+        Student stu2 = new Student();
+        stu2.setStudentId(2);
+        stu2.setFirstName("Jake");
+        stu2.setMiddleInitial("B");
+        stu2.setLastName("OConnor");
+        stu2.setAcademicYear("2024");
+        stu2.setPassword("54321");
+        this.students.add(stu2);
+
+        Student stu3 = new Student();
+        stu3.setStudentId(3);
+        stu1.setFirstName("Asher");
+        stu1.setMiddleInitial("D");
+        stu1.setLastName("OConnor");
+        stu1.setAcademicYear("2024");
+        stu1.setPassword("1518123");
+        this.students.add(stu3);
     }
 
     @AfterEach
@@ -100,7 +193,10 @@ class SectionControllerTest {
         //given
         SectionDto sectionDto = new SectionDto("Section New-Section",
                                               "2023-2024",
-                                            "8/21/23 and 5/01/24");
+                                            "8/21/23 and 5/01/24",
+                                            null,
+                                            null,
+                                            null);
 
         String json = this.objectMapper.writeValueAsString(sectionDto);
 
@@ -108,6 +204,9 @@ class SectionControllerTest {
         savedSection.setSectionName("Section New-Section");
         savedSection.setAcademicYear("2023-2024");
         savedSection.setFirstAndLastDate("8/21/23 and 5/01/24");
+        savedSection.setTeams(null);
+        savedSection.setInstructors(null);
+        savedSection.setStudents(null);
 
         given(this.sectionService.save(Mockito.any(Section.class))).willReturn(savedSection);
 
@@ -118,7 +217,10 @@ class SectionControllerTest {
                 .andExpect(jsonPath("$.message").value("Add Success"))
                 .andExpect(jsonPath("$.data.id").isNotEmpty())
                 .andExpect(jsonPath("$.data.academicYear").value(savedSection.getAcademicYear()))
-                .andExpect(jsonPath("$.data.firstAndLastDate").value(savedSection.getFirstAndLastDate()));
+                .andExpect(jsonPath("$.data.firstAndLastDate").value(savedSection.getFirstAndLastDate()))
+                .andExpect(jsonPath("$.data.teams").value(savedSection.getTeams()))
+                .andExpect(jsonPath("$.data.instructors").value(savedSection.getInstructors()))
+                .andExpect(jsonPath("$.data.students").value(savedSection.getStudents()));
     }
 
     @Test
@@ -126,7 +228,10 @@ class SectionControllerTest {
         //given
         SectionDto sectionDto = new SectionDto("Section 2.5",
                 "2023-2024",
-                "8/21/23 and 5/01/24");
+                "8/21/23 and 5/01/24",
+                null,
+                null,
+                null);
 
         String json = this.objectMapper.writeValueAsString(sectionDto);
 
@@ -134,6 +239,9 @@ class SectionControllerTest {
         updatedSection.setSectionName("Section 2.5");
         updatedSection.setAcademicYear("2023-2024");
         updatedSection.setFirstAndLastDate("8/21/23 and 5/01/24");
+        updatedSection.setTeams(null);
+        updatedSection.setInstructors(null);
+        updatedSection.setStudents(null);
 
         given(this.sectionService.update(eq("Section 2.5"), Mockito.any(Section.class))).willReturn(updatedSection);
 
@@ -144,7 +252,10 @@ class SectionControllerTest {
                 .andExpect(jsonPath("$.message").value("Update Success"))
                 .andExpect(jsonPath("$.data.id").isNotEmpty())
                 .andExpect(jsonPath("$.data.academicYear").value(updatedSection.getAcademicYear()))
-                .andExpect(jsonPath("$.data.firstAndLastDate").value(updatedSection.getFirstAndLastDate()));
+                .andExpect(jsonPath("$.data.firstAndLastDate").value(updatedSection.getFirstAndLastDate()))
+                .andExpect(jsonPath("$.data.teams").value(updatedSection.getTeams()))
+                .andExpect(jsonPath("$.data.instructors").value(updatedSection.getInstructors()))
+                .andExpect(jsonPath("$.data.students").value(updatedSection.getStudents()));
     }
 
     @Test
@@ -152,7 +263,10 @@ class SectionControllerTest {
         //given
         SectionDto sectionDto = new SectionDto("Section 2.5",
                 "2023-2024",
-                "8/21/23 and 5/01/24");
+                "8/21/23 and 5/01/24",
+                null,
+                null,
+                null);
 
         String json = this.objectMapper.writeValueAsString(sectionDto);
 

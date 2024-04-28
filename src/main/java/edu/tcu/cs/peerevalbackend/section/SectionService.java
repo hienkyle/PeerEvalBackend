@@ -24,8 +24,9 @@ public class SectionService {
     //to save the section
     public Section save(Section newSection) {
         return this.sectionRepository.save(newSection);
-      }
+    }
 
+      //mv: add rubric used to this one when you can
     public Section update(String sectionName, Section update) {
         return this.sectionRepository.findById(sectionName)
                 .map(oldSection -> {

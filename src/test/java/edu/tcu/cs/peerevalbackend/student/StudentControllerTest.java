@@ -1,8 +1,10 @@
 package edu.tcu.cs.peerevalbackend.student;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tcu.cs.peerevalbackend.section.dto.SectionDto;
 import edu.tcu.cs.peerevalbackend.student.dto.StudentDto;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
+import edu.tcu.cs.peerevalbackend.team.dto.TeamDto;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -119,7 +122,7 @@ public class StudentControllerTest {
     }
     @Test
     void testAddStudentSuccess() throws Exception {
-        StudentDto studentDto = new StudentDto(null, "Hermione Granger", 0);
+        StudentDto studentDto = new StudentDto(null, "Mason", "D","OConnor", "2024", 15, "team","section");
 
         String json = this.objectMapper.writeValueAsString(studentDto);
 
@@ -140,7 +143,7 @@ public class StudentControllerTest {
     }
     @Test
     void testUpdateStudentSuccess() throws Exception {
-        StudentDto studentDto = new StudentDto(null, "Updated student name", 0);
+        StudentDto studentDto = new StudentDto(null, "Mason", "D","OConnor", "2024", 15, "team","section");
 
         Student updatedStudent = new Student();
         updatedStudent.setStudentId(1);
@@ -164,9 +167,7 @@ public class StudentControllerTest {
         // Given.
         given(this.studentService.updateStudent(eq(5), Mockito.any(Student.class))).willThrow(new StudentNotFoundException(5));
 
-        StudentDto studentDto = new StudentDto(5, // This id does not exist in the database.
-                "Updated student name",
-                0);
+        StudentDto studentDto = new StudentDto(5, "Mason", "D","OConnor", "2024", 15, "team","section");
 
         String json = this.objectMapper.writeValueAsString(studentDto);
 

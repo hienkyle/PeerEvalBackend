@@ -19,7 +19,6 @@ public class SectionController {
     private final SectionService sectionService;
 
     private final SectionToSectionDtoConverter sectionToSectionDtoConverter;
-
     private final SectionDtoToSectionConverter sectionDtoToSectionConverter;
 
     public SectionController(SectionService sectionService, SectionToSectionDtoConverter sectionToSectionDtoConverter, SectionDtoToSectionConverter sectionDtoToSectionConverter) { //injection

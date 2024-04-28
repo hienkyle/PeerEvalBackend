@@ -1,5 +1,7 @@
 package edu.tcu.cs.peerevalbackend.student.dto;
 
+import edu.tcu.cs.peerevalbackend.section.Section;
+import edu.tcu.cs.peerevalbackend.section.dto.SectionDto;
 import edu.tcu.cs.peerevalbackend.team.dto.TeamDto;
 
 public record StudentDto(
@@ -7,9 +9,9 @@ public record StudentDto(
     String firstName,
     String middleInitial,
     String lastName,
-    String sectionName,
     String academicYear,
     Integer numberOfWars,
-    TeamDto team
+    String teamName,
+    String sectionName
     )
 {}
