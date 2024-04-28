@@ -194,7 +194,7 @@ class SectionServiceTest {
     void testDeleteNotFound() {
         //given
         given(sectionRepository.findById("Section 1")).willReturn(Optional.empty());
-        doNothing().when(sectionRepository).deleteById("Section 1");
+        //doNothing().when(sectionRepository).deleteById("Section 1");
 
         //when
         assertThrows(ObjectNotFoundException.class, () -> {
