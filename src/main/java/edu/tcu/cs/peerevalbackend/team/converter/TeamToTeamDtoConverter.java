@@ -55,7 +55,6 @@ public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
 
         TeamDto teamDto = new TeamDto(
                 source.getTeamName(),
-                source.getActiveWeeks(),
                 source.getAcademicYear(),
                 instructorDtos,
                 studentsDtos,

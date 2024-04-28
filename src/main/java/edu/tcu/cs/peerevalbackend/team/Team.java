@@ -22,8 +22,6 @@ public class Team implements Serializable {
     @ManyToOne
     private Section sectionName;
 
-    private List<Date> activeWeeks;
-
     /*
     * Has an error because Instructor is not annotated with the type of relationship
     * Many to many relationship between teams and instructors
@@ -54,10 +52,9 @@ public class Team implements Serializable {
     }
 
     //Dr. Wei does not have an overloaded constructor, I included it just in case
-    public Team(String teamName, Section sectionName, List<Date> activeWeeks, List<Instructor> instructors, List<Student> students, String academicYear) {
+    public Team(String teamName, Section sectionName, List<Instructor> instructors, List<Student> students, String academicYear) {
         this.teamName = teamName;
         this.sectionName = sectionName;
-        this.activeWeeks = activeWeeks;
         this.instructors = instructors;
         this.students = students;
         this.academicYear = academicYear;
@@ -79,14 +76,6 @@ public class Team implements Serializable {
 
     public void setSectionName(Section sectionName) {
         this.sectionName = sectionName;
-    }
-
-    public List<Date> getActiveWeeks() {
-        return activeWeeks;
-    }
-
-    public void setActiveWeeks(List<Date> activeWeeks) {
-        this.activeWeeks = activeWeeks;
     }
 
     public List<Instructor> getInstructors() {
