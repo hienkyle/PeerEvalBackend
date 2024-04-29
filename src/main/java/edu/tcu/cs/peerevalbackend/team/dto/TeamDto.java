@@ -16,7 +16,6 @@ import java.util.List;
 public record TeamDto(@NotEmpty(message = "Team name is required.")
                       String teamName,
 
-                      List<Date> activeWeeks,
                       String academicYear,
 
                       //Change to InstructorDto

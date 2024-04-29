@@ -103,7 +103,7 @@ class SectionControllerTest {
         i1.setName("alvie");
         i1.setPassword("123456");
         i1.setSections(null);
-        i1.setStatus("active");
+        //i1.setStatus("active");
         i1.setDeactivateReason(null);
         i1.setTeams(null);
         instructors.add(i1);
@@ -113,7 +113,7 @@ class SectionControllerTest {
         i2.setName("ana");
         i2.setPassword("123456");
         i2.setSections(null);
-        i2.setStatus("active");
+       // i2.setStatus("active");
         i2.setDeactivateReason(null);
         i2.setTeams(null);
         instructors.add(i2);
@@ -123,7 +123,7 @@ class SectionControllerTest {
         i3.setName("maribel");
         i3.setPassword("123456");
         i3.setSections(null);
-        i3.setStatus("active");
+       // i3.setStatus("active");
         i3.setDeactivateReason(null);
         i3.setTeams(null);
         instructors.add(i3);
@@ -197,7 +197,6 @@ class SectionControllerTest {
                                             null,
                                             null,
                                             null);
-        ;
 
         String json = this.objectMapper.writeValueAsString(sectionDto);
 
