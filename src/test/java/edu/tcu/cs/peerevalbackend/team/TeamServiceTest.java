@@ -1,7 +1,10 @@
 package edu.tcu.cs.peerevalbackend.team;
 
+import edu.tcu.cs.peerevalbackend.instructor.Instructor;
+import edu.tcu.cs.peerevalbackend.instructor.InstructorRepository;
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.student.StudentRepository;
+import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,6 +29,9 @@ public class TeamServiceTest {
 
     @Mock
     StudentRepository studentRepository;
+
+    @Mock
+    InstructorRepository instructorRepository;
 
     @BeforeEach
     void setUp() {
@@ -212,8 +218,69 @@ public class TeamServiceTest {
         verify(teamRepository, times(1)).findById("Team 1");
     }
 
+    /*
+    * Below are test cases for assigning student
+    */
+
     @Test
     void testAssignStudentSuccess() {
+        //Set up student
+        Student stu1 = new Student();
+        stu1.setStudentId(1);
+        stu1.setFirstName("Mason");
+        stu1.setMiddleInitial("D");
+        stu1.setLastName("OConnor");
+        stu1.setAcademicYear("2024");
+        stu1.setPassword("12345");
+
+        //Create a list of students for team 1
+        List<Student> team1Students = new ArrayList<>();
+        team1Students.add(stu1);
+
+        /*
+        * Set up team 1 where I will assign student
+        * Essentially create team 1 so student can belong/be part of team 1
+        * Needed this to test whether I properly remove student from a team before assigning to new team
+        */
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2023-2024");
+        team1.setInstructors(null);
+        team1.setStudents(team1Students);
+        team1.setSectionName(null);
+
+        /*
+        * Doesn't seem like I really need this but just for sake of completeness
+        * Set the team for student
+        */
+        stu1.setTeam(team1);
+
+        //Create a list of students for team 2
+        List<Student> team2Students = new ArrayList<>();
+
+        //Set up a new team where I will assign student
+        Team team2 = new Team();
+        team2.setTeamName("Team 2");
+        team2.setAcademicYear("2023-2024");
+        team2.setInstructors(null);
+        team2.setStudents(team2Students);
+        team2.setSectionName(null);
+
+        //Given
+        given(this.studentRepository.findById(1)).willReturn(Optional.of(stu1));
+        given(this.teamRepository.findById("Team 2")).willReturn(Optional.of(team2));
+
+        //When
+        this.teamService.assignStudent("Team 2", 1);
+
+        //Then
+        assertThat(stu1.getTeamName()).isEqualTo(team2.getTeamName());
+        assertThat(team1.getStudents()).doesNotContain(stu1);
+        assertThat(team2.getStudents()).contains(stu1);
+    }
+
+    @Test
+    void testAssignStudentErrorWithNonExistentTeamName() {
         //Set up student
         Student stu1 = new Student();
         stu1.setStudentId(1);
@@ -238,72 +305,344 @@ public class TeamServiceTest {
         team1.setStudents(team1Students);
         team1.setSectionName(null);
 
-        //Create a list of students for team 2
-        List<Student> team2Students = new ArrayList<>();
-
-        //Set up a new team where I will assign student
-        Team team2 = new Team();
-        team2.setTeamName("Team 2");
-        team2.setAcademicYear("2023-2024");
-        team2.setInstructors(null);
-        team2.setStudents(team2Students);
-        team2.setSectionName(null);
+        /*
+        * Set the team for student
+        */
+        stu1.setTeam(team1);
 
         //Given
         given(this.studentRepository.findById(1)).willReturn(Optional.of(stu1));
+        given(this.teamRepository.findById("Team 2")).willReturn(Optional.empty());
+
+        //When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.assignStudent("Team 2", 1);
+        });
+
+        //Then
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find team with Id Team 2 :(");
+        assertThat(stu1.getTeamName()).isEqualTo(team1.getTeamName());
+    }
+
+    @Test
+    void testAssignStudentErrorWithNonExistentStudentId() {
+        //Given
+        given(this.studentRepository.findById(1)).willReturn(Optional.empty());
+
+        //When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.assignStudent("Team 2", 1);
+        });
+
+        //Then
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find student with Id 1 :(");
+    }
+
+    /*
+    * Below are test cases for assigning instructor
+    */
+
+    @Test
+    void testAssignInstructorSuccess() {
+        //Set up an instructor
+        Instructor i1 = new Instructor();
+        i1.setInstructorId("1");
+        i1.setName("alvie");
+        i1.setPassword("123456");
+        i1.setSections(null);
+        i1.setStatus(ActiveStatus.IS_ACTIVE);
+        i1.setDeactivateReason(null);
+
+        //Create a list of instructors for team 1
+        List<Instructor> team1Instructors = new ArrayList<>();
+        team1Instructors.add(i1);
+
+        /*
+        * Set up team 1 where I will assign instructor
+        * Needed this to test whether I properly assign instructor to new team
+        */
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2023-2024");
+        team1.setInstructors(team1Instructors);
+        team1.setStudents(null);
+        team1.setSectionName(null);
+
+        //Create a list of teams for instructor
+        List<Team> instructorTeams = new ArrayList<>();
+        instructorTeams.add(team1);
+
+        //Set list of teams for instructor
+        i1.setTeams(instructorTeams);
+
+        //Create a list of instructors for team 2
+        List<Instructor> team2Instructors = new ArrayList<>();
+
+        //Set up a new team where I will assign instructor
+        Team team2 = new Team();
+        team2.setTeamName("Team 2");
+        team2.setAcademicYear("2023-2024");
+        team2.setInstructors(team2Instructors);
+        team2.setStudents(null);
+        team2.setSectionName(null);
+
+        //Given
+        given(this.instructorRepository.findById("1")).willReturn(Optional.of(i1));
         given(this.teamRepository.findById("Team 2")).willReturn(Optional.of(team2));
 
         //When
-        this.teamService.assignStudent("Team 2", 1);
+        this.teamService.assignInstructor("Team 2", "1");
 
         //Then
-        assertThat(stu1.getTeamName()).isEqualTo(team2.getTeamName());
-        assertThat(team2.getStudents()).contains(stu1);
+        assertThat(i1.getTeamNames()).contains(team1.getTeamName()); //Think this is the way because instructor can be assigned to multiple teams
+        assertThat(i1.getTeamNames()).contains(team2.getTeamName());
+        assertThat(team1.getInstructors()).contains(i1);
+        assertThat(team2.getInstructors()).contains(i1);
+    }
+
+    @Test
+    void testAssignInstructorErrorWithNonExistentTeamName() {
+        //Set up an instructor
+        Instructor i1 = new Instructor();
+        i1.setInstructorId("1");
+        i1.setName("alvie");
+        i1.setPassword("123456");
+        i1.setSections(null);
+        i1.setStatus(ActiveStatus.IS_ACTIVE);
+        i1.setDeactivateReason(null);
+
+        //Create a list of instructors for team 1
+        List<Instructor> team1Instructors = new ArrayList<>();
+        team1Instructors.add(i1);
+
+        /*
+        * Set up team 1 where I will assign instructor
+        * Needed this to test whether I properly assign instructor to new team
+        */
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2023-2024");
+        team1.setInstructors(team1Instructors);
+        team1.setStudents(null);
+        team1.setSectionName(null);
+
+        //Create a list of teams for instructor
+        List<Team> instructorTeams = new ArrayList<>();
+        instructorTeams.add(team1);
+
+        //Set list of teams for instructor
+        i1.setTeams(instructorTeams);
+
+        //Given
+        given(this.instructorRepository.findById("1")).willReturn(Optional.of(i1));
+        given(this.teamRepository.findById("Team 2")).willReturn(Optional.empty());
+
+        //When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.assignInstructor("Team 2", "1");
+        });
+
+        //Then
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find team with Id Team 2 :(");
+        assertThat(i1.getTeamNames()).contains(team1.getTeamName());
+    }
+
+    @Test
+    void testAssignInstructorErrorWithNonExistentInstructorId() {
+        //Given
+        given(this.instructorRepository.findById("1")).willReturn(Optional.empty());
+
+        //When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.assignInstructor("Team 2", "1");
+        });
+
+        //Then
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find instructor with Id 1 :(");
+    }
+
+    /*
+    * Below are test cases for removing student
+    */
+
+    @Test
+    void testRemoveStudentSuccess() {
+        //Set up student
+        Student stu1 = new Student();
+        stu1.setStudentId(1);
+        stu1.setFirstName("Mason");
+        stu1.setMiddleInitial("D");
+        stu1.setLastName("OConnor");
+        stu1.setAcademicYear("2024");
+        stu1.setPassword("12345");
+
+        //Create a list of students for team 1
+        List<Student> team1Students = new ArrayList<>();
+        team1Students.add(stu1);
+
+        /*
+         * Set up team 1 where I will assign student
+         * Essentially create team 1 so student can belong/be part of team 1
+         * Needed this to test whether I properly remove student from a team
+         */
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2023-2024");
+        team1.setInstructors(null);
+        team1.setStudents(team1Students);
+        team1.setSectionName(null);
+
+        /*
+         * Set the team for student
+         */
+        stu1.setTeam(team1);
+
+        //Given
+        given(this.studentRepository.findById(1)).willReturn(Optional.of(stu1));
+        given(this.teamRepository.findById("Team 1")).willReturn(Optional.of(team1));
+
+        //When
+        this.teamService.removeStudent("Team 1", 1);
+
+        //Then
+        assertThat(stu1.getTeamName()).isEqualTo(null); //Check to see if the team for student is null after removing student from team
+        assertThat(team1.getStudents()).doesNotContain(stu1); //Check if list of students in team does not have stu1
+    }
+
+    @Test
+    void testRemoveStudentErrorWithNonExistentTeamName() {
+        //Set up student
+        Student stu1 = new Student();
+        stu1.setStudentId(1);
+        stu1.setFirstName("Mason");
+        stu1.setMiddleInitial("D");
+        stu1.setLastName("OConnor");
+        stu1.setAcademicYear("2024");
+        stu1.setPassword("12345");
+        stu1.setTeam(null);
+
+        //Given
+        given(this.studentRepository.findById(1)).willReturn(Optional.of(stu1));
+        given(this.teamRepository.findById("Team 2")).willReturn(Optional.empty());
+
+        //When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.removeStudent("Team 2", 1);
+        });
+
+        //Then
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find team with Id Team 2 :(");
+        assertThat(stu1.getTeamName()).isEqualTo(null);
+    }
+
+    @Test
+    void testRemoveStudentErrorWithNonExistentStudentId() {
+        //Given
+        given(this.studentRepository.findById(1)).willReturn(Optional.empty());
+
+        //When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.removeStudent("Team 2", 1);
+        });
+
+        //Then
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find student with Id 1 :(");
+    }
+
+    /*
+    * Below are test cases for removing student
+    */
+
+    @Test
+    void testRemoveInstructorSuccess() {
+        //Set up an instructor
+        Instructor i1 = new Instructor();
+        i1.setInstructorId("1");
+        i1.setName("alvie");
+        i1.setPassword("123456");
+        i1.setSections(null);
+        i1.setStatus(ActiveStatus.IS_ACTIVE);
+        i1.setDeactivateReason(null);
+
+        //Create a list of instructors for team 1
+        List<Instructor> team1Instructors = new ArrayList<>();
+        team1Instructors.add(i1);
+
+        /*
+         * Set up team 1 where I will assign instructor
+         * Needed this to test whether I properly assign instructor to new team
+         */
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2023-2024");
+        team1.setInstructors(team1Instructors);
+        team1.setStudents(null);
+        team1.setSectionName(null);
+
+        //Create a list of teams for instructor
+        List<Team> instructorTeams = new ArrayList<>();
+        instructorTeams.add(team1);
+
+        //Set list of teams for instructor
+        i1.setTeams(instructorTeams);
+
+        //Given
+        given(this.instructorRepository.findById("1")).willReturn(Optional.of(i1));
+        given(this.teamRepository.findById("Team 1")).willReturn(Optional.of(team1));
+
+        //When
+        this.teamService.removeInstructor("Team 1", "1");
+
+        //Then
+        assertThat(i1.getTeams()).doesNotContain(team1);
+        assertThat(team1.getInstructors()).doesNotContain(i1);
+    }
+
+    @Test
+    void testRemoveInstructorErrorWithNonExistentTeamName() {
+        //Set up an instructor
+        Instructor i1 = new Instructor();
+        i1.setInstructorId("1");
+        i1.setName("alvie");
+        i1.setPassword("123456");
+        i1.setSections(null);
+        i1.setStatus(ActiveStatus.IS_ACTIVE);
+        i1.setDeactivateReason(null);
+        i1.setTeams(null);
+
+        //Given
+        given(this.instructorRepository.findById("1")).willReturn(Optional.of(i1));
+        given(this.teamRepository.findById("Team 2")).willReturn(Optional.empty());
+
+        //When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.removeInstructor("Team 2", "1");
+        });
+
+        //Then
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find team with Id Team 2 :(");
+        assertThat(i1.getTeams()).isEqualTo(null);
+    }
+
+    @Test
+    void testRemoveInstructorErrorWithNonExistentInstructorId() {
+        //Given
+        given(this.instructorRepository.findById("1")).willReturn(Optional.empty());
+
+        //When
+        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
+            this.teamService.removeInstructor("Team 2", "1");
+        });
+
+        //Then
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find instructor with Id 1 :(");
     }
 }
-/*
-    @Test
-    void testAssignArtifactErrorWithNonExistentWizardId() {
-        //given
-        Artifact a = new Artifact();
-        a.setId("1250808601744904192");
-        a.setName("Invisibility Cloak");
-        a.setDescription("An invisibility cloak is used to make the wearer invisible.");
-        a.setImageUrl("ImageUrl");
-
-        Wizard w2 = new Wizard();
-        w2.setId(2);
-        w2.setName("Harry Potter");
-        w2.addArtifact(a);
-
-        given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(a));
-        given(this.wizardRepository.findById(3)).willReturn(Optional.empty());
-
-        //when
-        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            this.wizardService.assignArtifact(3, "1250808601744904192");
-        });
-
-        //then
-        assertThat(thrown)
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find wizard with Id 3 :(");
-        assertThat(a.getOwner().getId()).isEqualTo(2);
-    }
-
-    @Test
-    void testAssignArtifactErrorWithNonExistentArtifactId() {
-        //given
-        given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.empty());
-
-        //when
-        Throwable thrown = assertThrows(ObjectNotFoundException.class, () -> {
-            this.wizardService.assignArtifact(3, "1250808601744904192");
-        });
-
-        //then
-        assertThat(thrown)
-                .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find artifact with Id 1250808601744904192 :(");
-    }
-*/
