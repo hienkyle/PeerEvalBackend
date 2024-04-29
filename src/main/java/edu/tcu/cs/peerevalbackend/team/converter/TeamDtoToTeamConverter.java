@@ -33,7 +33,6 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
     public Team convert(TeamDto source) {
         Team team = new Team();
         team.setTeamName(source.teamName());
-        team.setActiveWeeks(source.activeWeeks());
         team.setAcademicYear(source.academicYear());
 
         List<Instructor> instructors = new ArrayList<>();

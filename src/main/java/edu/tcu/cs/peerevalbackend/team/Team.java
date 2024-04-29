@@ -22,8 +22,6 @@ public class Team implements Serializable {
     @ManyToOne
     private Section sectionName;
 
-    private List<Date> activeWeeks;
-
     /*
     * Has an error because Instructor is not annotated with the type of relationship
     * Many to many relationship between teams and instructors
@@ -44,7 +42,7 @@ public class Team implements Serializable {
     * This should eventually work, ensure Student class has something along the lines of Team teamName as one of its fields
     * The new annotation should be: @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "teamName")
     */
-    @OneToMany(mappedBy = "teamName")
+    @OneToMany(mappedBy = "team")
     private List<Student> students;
 
     String academicYear;
@@ -54,10 +52,9 @@ public class Team implements Serializable {
     }
 
     //Dr. Wei does not have an overloaded constructor, I included it just in case
-    public Team(String teamName, Section sectionName, List<Date> activeWeeks, List<Instructor> instructors, List<Student> students, String academicYear) {
+    public Team(String teamName, Section sectionName, List<Instructor> instructors, List<Student> students, String academicYear) {
         this.teamName = teamName;
         this.sectionName = sectionName;
-        this.activeWeeks = activeWeeks;
         this.instructors = instructors;
         this.students = students;
         this.academicYear = academicYear;
@@ -79,14 +76,6 @@ public class Team implements Serializable {
 
     public void setSectionName(Section sectionName) {
         this.sectionName = sectionName;
-    }
-
-    public List<Date> getActiveWeeks() {
-        return activeWeeks;
-    }
-
-    public void setActiveWeeks(List<Date> activeWeeks) {
-        this.activeWeeks = activeWeeks;
     }
 
     public List<Instructor> getInstructors() {
@@ -149,14 +138,20 @@ public class Team implements Serializable {
     * For use case 14
     */
     public void removeAllStudents() {
-        //Iterate through list of students in a team and set team to null
-        this.students.stream().forEach(student -> student.setTeam(null));
+        if(this.students != null) {
+            //Iterate through list of students in a team and set team to null
+            this.students.stream().forEach(student -> student.setTeam(null));
+        }
+
         this.students = new ArrayList<>();
     }
 
     public void removeAllInstructors() {
-        //Iterate through list of instructors in a team and set team to null
-        this.instructors.stream().forEach(instructor -> instructor.removeTeam(this));
+        if(this.instructors != null) {
+            //Iterate through list of instructors in a team and set team to null
+            this.instructors.stream().forEach(instructor -> instructor.removeTeam(this));
+        }
+
         this.instructors = new ArrayList<>();
     }
 

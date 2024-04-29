@@ -198,7 +198,6 @@ class SectionControllerTest {
                                             null,
                                             null,
                                             null);
-        ;
 
         String json = this.objectMapper.writeValueAsString(sectionDto);
 

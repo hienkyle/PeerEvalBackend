@@ -6,7 +6,11 @@ import edu.tcu.cs.peerevalbackend.section.dto.SectionDto;
 import edu.tcu.cs.peerevalbackend.system.Result;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/peerEval/section")
@@ -53,4 +57,17 @@ public class SectionController {
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
     }
 
+    @PostMapping("/{sectionName}/active-weeks")
+    public Result setActiveWeeks(@PathVariable String sectionName, @RequestBody List<Date> activeWeeks) {
+        sectionService.setupActiveWeeks(sectionName, activeWeeks);
+        return new Result(true, StatusCode.SUCCESS, "Active weeks set up successfully for section: " + sectionName);
+    }
+
+    @GetMapping("/{sectionName}/active-weeks")
+    public Result getActiveWeeks(@PathVariable String sectionName) {
+        List<Date> activeWeeks = sectionService.getActiveWeeks(sectionName);
+        return new Result(true, StatusCode.SUCCESS, "Active weeks retrieved successfully for section: " + sectionName, activeWeeks);
+    }
 }
+
+
