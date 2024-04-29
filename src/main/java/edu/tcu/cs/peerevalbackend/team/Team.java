@@ -138,14 +138,20 @@ public class Team implements Serializable {
     * For use case 14
     */
     public void removeAllStudents() {
-        //Iterate through list of students in a team and set team to null
-        this.students.stream().forEach(student -> student.setTeam(null));
+        if(this.students != null) {
+            //Iterate through list of students in a team and set team to null
+            this.students.stream().forEach(student -> student.setTeam(null));
+        }
+
         this.students = new ArrayList<>();
     }
 
     public void removeAllInstructors() {
-        //Iterate through list of instructors in a team and set team to null
-        this.instructors.stream().forEach(instructor -> instructor.removeTeam(this));
+        if(this.instructors != null) {
+            //Iterate through list of instructors in a team and set team to null
+            this.instructors.stream().forEach(instructor -> instructor.removeTeam(this));
+        }
+
         this.instructors = new ArrayList<>();
     }
 

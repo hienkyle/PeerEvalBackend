@@ -38,7 +38,7 @@ public class TeamService {
     */
     public Team findByName(String teamName) {
         return this.teamRepository.findById(teamName)
-                .orElseThrow(() -> new TeamNotFoundException(teamName));
+                .orElseThrow(() -> new ObjectNotFoundException("team", teamName));
     }
 
     /*
@@ -63,7 +63,7 @@ public class TeamService {
                     oldTeam.setTeamName(update.getTeamName());
                     return this.teamRepository.save(oldTeam);
                 })
-                .orElseThrow(() -> new TeamNotFoundException(teamName));
+                .orElseThrow(() -> new ObjectNotFoundException("team", teamName));
     }
 
     /*
@@ -73,7 +73,7 @@ public class TeamService {
     */
     public void delete(String teamName) {
         Team teamToBeDeleted = this.teamRepository.findById(teamName)
-                .orElseThrow(() -> new TeamNotFoundException(teamName));
+                .orElseThrow(() -> new ObjectNotFoundException("team", teamName));
 
         //Remove all students and instructors from team
         teamToBeDeleted.removeAllStudents();
@@ -93,7 +93,7 @@ public class TeamService {
 
         //Find this team by team name from DB
         Team teamAssigned = this.teamRepository.findById(teamName)
-                .orElseThrow(() -> new TeamNotFoundException(teamName));
+                .orElseThrow(() -> new ObjectNotFoundException("team", teamName));
 
         //Student assignment
         //This removes student from current team, if any, in order to reassign
@@ -115,7 +115,7 @@ public class TeamService {
 
         //Find this team by team name from DB
         Team teamWhereStuDel = this.teamRepository.findById(teamName)
-                .orElseThrow(() -> new TeamNotFoundException(teamName));
+                .orElseThrow(() -> new ObjectNotFoundException("team", teamName));
 
         //Check if the student is in a team and remove
         if (studentToBeDeleted.getTeam() != null) {
@@ -134,7 +134,7 @@ public class TeamService {
 
         //Find this team by team name from DB
         Team teamAssigned = this.teamRepository.findById(teamName)
-                .orElseThrow(() -> new TeamNotFoundException(teamName));
+                .orElseThrow(() -> new ObjectNotFoundException("team", teamName));
 
         teamAssigned.addInstructor(instructorToBeAssigned);
     }
@@ -150,7 +150,7 @@ public class TeamService {
 
         //Find this team by team name from DB
         Team teamWhereStuDel = this.teamRepository.findById(teamName)
-                .orElseThrow(() -> new TeamNotFoundException(teamName));
+                .orElseThrow(() -> new ObjectNotFoundException("team", teamName));
 
         //Check if the instructor is in a team, and remove
         if(instructorToBeDeleted.getTeams().contains(teamWhereStuDel)) {
