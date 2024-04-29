@@ -1,6 +1,7 @@
 package edu.tcu.cs.peerevalbackend.instructor;
 
 import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
+import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -95,4 +97,23 @@ class InstructorServiceTest {
         assertThat(returnedInstructor.getTeams()).isEqualTo(i.getTeams());
         verify(instructorRepository, times(1)).findById("1");
     }
+
+    @Test
+    void findByIdNotFound() {
+        // Given
+        given(instructorRepository.findById("1")).willReturn(Optional.empty());
+
+        // When
+        Throwable thrown = catchThrowable(() -> {
+            Instructor returnedInstructor = instructorService.findById("1");
+        });
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find instructor with Id 1 :(");
+        verify(instructorRepository,times(1)).findById("1");
+    }
+
+
 }
