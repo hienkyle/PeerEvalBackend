@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.section.dto.SectionDto;
 import edu.tcu.cs.peerevalbackend.student.Student;
+import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevalbackend.team.Team;
@@ -103,7 +104,7 @@ class SectionControllerTest {
         i1.setName("alvie");
         i1.setPassword("123456");
         i1.setSections(null);
-        i1.setStatus("active");
+        i1.setStatus(ActiveStatus.IS_ACTIVE);
         i1.setDeactivateReason(null);
         i1.setTeams(null);
         instructors.add(i1);
@@ -113,7 +114,7 @@ class SectionControllerTest {
         i2.setName("ana");
         i2.setPassword("123456");
         i2.setSections(null);
-        i2.setStatus("active");
+        i2.setStatus(ActiveStatus.IS_ACTIVE);
         i2.setDeactivateReason(null);
         i2.setTeams(null);
         instructors.add(i2);
@@ -123,7 +124,7 @@ class SectionControllerTest {
         i3.setName("maribel");
         i3.setPassword("123456");
         i3.setSections(null);
-        i3.setStatus("active");
+        i3.setStatus(ActiveStatus.IS_DEACTIVATED);
         i3.setDeactivateReason(null);
         i3.setTeams(null);
         instructors.add(i3);
