@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+//Make changes
 @Component
 public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
     private final SectionToSectionDtoConverter sectionToSectionDtoConverter;

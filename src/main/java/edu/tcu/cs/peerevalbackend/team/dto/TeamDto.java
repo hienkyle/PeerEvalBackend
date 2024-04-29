@@ -13,10 +13,16 @@ import java.util.List;
 /*
 * Attributes/properties that can be seen to client
 */
+
+//Make changes
 public record TeamDto(@NotEmpty(message = "Team name is required.")
                       String teamName,
 
                       String academicYear,
+
+                      /*
+                      * Change all of these below
+                      */
 
                       //Change to InstructorDto
                       List<InstructorDto> instructorDtos,

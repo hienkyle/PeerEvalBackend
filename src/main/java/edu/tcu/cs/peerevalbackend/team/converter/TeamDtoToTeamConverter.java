@@ -14,6 +14,7 @@ import edu.tcu.cs.peerevalbackend.instructor.converter.InstructorDtoToInstructor
 import java.util.ArrayList;
 import java.util.List;
 
+//Make changes
 @Component
 public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
     private final InstructorDtoToInstructorConverter instructorDtoToInstructorConverter;
@@ -51,6 +52,7 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
             team.setStudents(students);
         }
 
+        //Need to fix this
         if(source.sectionDto() != null) {
             team.setSectionName(sectionDtoToSectionConverter.convert(source.sectionDto()));
         }
