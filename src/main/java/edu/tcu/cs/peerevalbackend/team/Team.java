@@ -42,7 +42,7 @@ public class Team implements Serializable {
     * This should eventually work, ensure Student class has something along the lines of Team teamName as one of its fields
     * The new annotation should be: @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "teamName")
     */
-    @OneToMany(mappedBy = "teamName")
+    @OneToMany(mappedBy = "team")
     private List<Student> students;
 
     String academicYear;
