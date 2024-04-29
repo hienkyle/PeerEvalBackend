@@ -1,6 +1,6 @@
 package edu.tcu.cs.peerevalbackend.student;
 
-import edu.tcu.cs.peerevalbackend.student.utils.IdWorker;
+import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,25 +16,22 @@ import java.util.Map;
 @Transactional
 public class StudentService {
     private final StudentRepository studentRepository;
-    private final IdWorker idWorker;
 
-    public StudentService(StudentRepository studentRepository, IdWorker idWorker){
+    public StudentService(StudentRepository studentRepository){
         this.studentRepository = studentRepository;
-        this.idWorker = idWorker;
     }
 
     public Student addStudent(Student newStudent){
-        newStudent.setStudentId(idWorker.generateUniqueId());
         return this.studentRepository.save(newStudent);
     }
 
     public Student findById(Integer studentId){
-        return this.studentRepository.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
+        return this.studentRepository.findById(studentId).orElseThrow(() -> new ObjectNotFoundException("Student",studentId));
     }
 
     public void deleteStudent(Integer studentId){
         this.studentRepository.findById(studentId)
-                .orElseThrow(()->new StudentNotFoundException(studentId));
+                .orElseThrow(()->new ObjectNotFoundException("Student",studentId));
         this.studentRepository.deleteById(studentId);
     }
 
@@ -46,7 +43,7 @@ public class StudentService {
                     oldStudent.setLastName(update.getLastName());
                     return this.studentRepository.save(oldStudent);
                 })
-                .orElseThrow(() -> new StudentNotFoundException(studentId));
+                .orElseThrow(() -> new ObjectNotFoundException("Student",studentId));
     }
     public List<Student> findAll(){
         return this.studentRepository.findAll();

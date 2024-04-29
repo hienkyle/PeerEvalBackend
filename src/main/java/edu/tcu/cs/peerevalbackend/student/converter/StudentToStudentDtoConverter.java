@@ -10,13 +10,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StudentToStudentDtoConverter implements Converter<Student, StudentDto> {
-    private final TeamToTeamDtoConverter teamToTeamDtoConverter;
-    private final SectionToSectionDtoConverter sectionToSectionDtoConverter;
 
-    public StudentToStudentDtoConverter(TeamToTeamDtoConverter teamToTeamDtoConverter, SectionToSectionDtoConverter sectionToSectionDtoConverter){
-        this.teamToTeamDtoConverter = teamToTeamDtoConverter;
-        this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
-    }
+    public StudentToStudentDtoConverter(){}
 
     @Override
     public StudentDto convert(Student source){

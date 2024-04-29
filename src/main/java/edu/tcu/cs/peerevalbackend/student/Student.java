@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 public class Student {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer  studentId;
 
     private String firstName;
@@ -46,15 +47,21 @@ public class Student {
     public  Student(){
         
     }
-    public void assignToTeam(Team team){
-        this.team.addStudent(this);
-        this.team = team;
-    }
     public String getTeamName(){
-        return this.team.getTeamName();
+        if (this.team!=null) {
+            return this.team.getTeamName();
+        }
+        else{
+            return null;
+        }
     }
     public String getSectionName(){
-        return this.section.getSectionName();
+                if (this.section!=null) {
+                    return this.section.getSectionName();
+                }
+                else{
+                    return null;
+                }
     }
     public void addWar(WeeklyActivityReport war){
         war.setAuthor(this);
