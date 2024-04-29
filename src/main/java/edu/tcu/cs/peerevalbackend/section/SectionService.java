@@ -4,6 +4,10 @@ import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @Transactional //will make transaction processing easier later on
 public class SectionService {
@@ -41,6 +45,21 @@ public class SectionService {
         this.sectionRepository.findById(sectionName)
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
         this.sectionRepository.deleteById(sectionName);
+    }
+    // setup active weeks
+    public void setupActiveWeeks(String sectionName, List<Date> activeWeeks) {
+        Optional<Section> optionalSection = sectionRepository.findById(sectionName);
+        if (optionalSection.isPresent()) {
+            Section section = optionalSection.get();
+            section.setActiveWeeks(activeWeeks);
+            sectionRepository.save(section);
+        }
+    }
+    public List<Date> getActiveWeeks(String sectionName) {
+        Section section = sectionRepository.findById(sectionName)
+                .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
+
+        return section.getActiveWeeks();
     }
 
 }
