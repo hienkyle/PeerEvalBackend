@@ -1,12 +1,15 @@
 package edu.tcu.cs.peerevalbackend.student;
 
-import org.hibernate.ObjectNotFoundException;
+import edu.tcu.cs.peerevalbackend.student.utils.IdWorker;
+import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,10 +24,11 @@ import static org.mockito.Mockito.*;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
 public class StudentServiceTest {
     @Mock
     StudentRepository studentRepository;
+    @Mock
+    IdWorker idWorker;
 
     @InjectMocks
     StudentService studentService;
@@ -101,8 +105,8 @@ public class StudentServiceTest {
 
         //Then
         assertThat(thrown)
-                .isInstanceOf(StudentNotFoundException.class)
-                .hasMessage("Could not find student with Id 1");
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find Student with Id 1 :(");
         verify(this.studentRepository,times(1)).findById(1);
     }
     @Test
@@ -148,7 +152,7 @@ public class StudentServiceTest {
 
         given(this.studentRepository.findById(1)).willReturn(Optional.empty());
 
-        assertThrows(StudentNotFoundException.class, ()->{
+        assertThrows(ObjectNotFoundException.class, ()->{
             this.studentService.updateStudent(1, update);
         });
 
