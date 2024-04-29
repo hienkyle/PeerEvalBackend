@@ -1,6 +1,5 @@
 package edu.tcu.cs.peerevalbackend.student;
 
-import edu.tcu.cs.peerevalbackend.student.utils.IdWorker;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.ArrayList;
@@ -23,12 +21,10 @@ import static org.mockito.Mockito.*;
 
 import static org.mockito.BDDMockito.given;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
     @Mock
     StudentRepository studentRepository;
-    @Mock
-    IdWorker idWorker;
 
     @InjectMocks
     StudentService studentService;
