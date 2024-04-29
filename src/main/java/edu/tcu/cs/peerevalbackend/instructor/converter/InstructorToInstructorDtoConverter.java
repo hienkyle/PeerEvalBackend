@@ -23,7 +23,7 @@ public class InstructorToInstructorDtoConverter implements Converter<Instructor,
                 source.getName(),
                 source.getStatus(),
                 source.getTeams() != null ? source.getTeams().stream()
-                        .map(team -> teamToTeamDtoConverter.convert(team)).collect(Collectors.toList()) : null
+                        .map(team -> team.getTeamName()).collect(Collectors.toList()) : null
         );
         return instructorDto;
     }

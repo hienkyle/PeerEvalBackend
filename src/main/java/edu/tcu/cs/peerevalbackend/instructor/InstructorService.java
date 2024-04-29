@@ -21,70 +21,6 @@ public class InstructorService {
     }
 
     /*
-     * Use case 22: View an instructor
-     *
-     * Name: Hien
-     *
-     * @param instructorId - the id of the instructor
-     *
-     * @return Instructor - the instructor with the specified id
-     *
-     * @throw ObjectNotFoundException
-     *
-     * Note: NOT TESTED
-     */
-    public Instructor findById(String instructorId) {
-        return this.instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
-    }
-
-    /*
-     * Use case 23: Deactivate an instructor
-     *
-     * Name: Hien
-     *
-     * @param instructorId - the id of the instructor
-     * @param reason - the reason to deactivate this instructor
-     *
-     * @return Instructor - the deactivated instructor
-     *
-     * @throw ObjectNotFoundException
-     *
-     * Note: NOT TESTED
-     */
-    public Instructor deactivate(String instructorId, String reason) {
-        return this.instructorRepository.findById(instructorId)
-                .map(activeInstructor -> {
-                    activeInstructor.setStatus(ActiveStatus.IS_DEACTIVATED);
-                    activeInstructor.setDeactivateReason(reason);
-                    return this.instructorRepository.save(activeInstructor);
-                })
-                .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
-    }
-
-    /*
-     * Use case 24: Reactivate an instructor
-     *
-     * Name: Hien
-     *
-     * @param instructorId - the id of the instructor
-     *
-     * @return Instructor - the reactivated instructor
-     *
-     * @throw ObjectNotFoundException
-     *
-     * Note: NOT TESTED
-     */
-    public Instructor reactivate(String instructorId) {
-        return this.instructorRepository.findById(instructorId)
-                .map(deactivatedInstructor -> {
-                    deactivatedInstructor.setStatus(ActiveStatus.IS_ACTIVE);
-                    return this.instructorRepository.save(deactivatedInstructor);
-                })
-                .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
-    }
-
-    /*
      * Use case 18: Search for instructors using criteria
      *
      * Name: Hien
@@ -112,5 +48,84 @@ public class InstructorService {
         }
 
         return this.instructorRepository.findAll(spec, pageable);
+    }
+
+    /*
+     * Use case 22: View an instructor
+     *
+     * Name: Hien
+     *
+     * @param instructorId - the id of the instructor
+     *
+     * @return Instructor - the instructor with the specified id
+     *
+     * @throw ObjectNotFoundException
+     *
+     * Note: TESTED - SUCCESS and NOT FOUND
+     */
+    public Instructor findById(String instructorId) {
+        return this.instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
+    }
+
+    /*
+     * Supplemental use case: Save an instructor
+     *
+     * Name: Hien
+     *
+     * @param instructor - the instructor
+     *
+     * @return Instructor - the instructor
+     *
+     * Note: TESTED - SUCCESS
+     */
+    public Instructor save(Instructor instructor) {
+        return this.instructorRepository.save(instructor);
+    }
+
+    /*
+     * Use case 23: Deactivate an instructor
+     *
+     * Name: Hien
+     *
+     * @param instructorId - the id of the instructor
+     * @param reason - the reason to deactivate this instructor
+     *
+     * @return Instructor - the deactivated instructor
+     *
+     * @throw ObjectNotFoundException
+     *
+     * Note: TESTED - SUCCESS and NOT FOUND
+     */
+    public Instructor deactivate(String instructorId, String reason) {
+        return this.instructorRepository.findById(instructorId)
+                .map(activeInstructor -> {
+                    activeInstructor.setStatus(ActiveStatus.IS_DEACTIVATED);
+                    activeInstructor.setDeactivateReason(reason);
+                    return this.instructorRepository.save(activeInstructor);
+                })
+                .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
+    }
+
+    /*
+     * Use case 24: Reactivate an instructor
+     *
+     * Name: Hien
+     *
+     * @param instructorId - the id of the instructor
+     *
+     * @return Instructor - the reactivated instructor
+     *
+     * @throw ObjectNotFoundException
+     *
+     * Note: TESTED - SUCCESS and NOT FOUND
+     */
+    public Instructor reactivate(String instructorId) {
+        return this.instructorRepository.findById(instructorId)
+                .map(deactivatedInstructor -> {
+                    deactivatedInstructor.setStatus(ActiveStatus.IS_ACTIVE);
+                    return this.instructorRepository.save(deactivatedInstructor);
+                })
+                .orElseThrow(() -> new ObjectNotFoundException("instructor", instructorId));
     }
 }
