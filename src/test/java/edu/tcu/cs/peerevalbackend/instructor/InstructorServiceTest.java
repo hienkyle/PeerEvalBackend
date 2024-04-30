@@ -72,7 +72,7 @@ class InstructorServiceTest {
     }
 
     @Test
-    void findByIdSuccess() {
+    void testFindByIdSuccess() {
         // Given
         Instructor i= new Instructor();
         i.setInstructorId("1");
@@ -99,7 +99,7 @@ class InstructorServiceTest {
     }
 
     @Test
-    void findByIdNotFound() {
+    void testFindByIdNotFound() {
         // Given
         given(instructorRepository.findById("1")).willReturn(Optional.empty());
 
@@ -115,5 +115,107 @@ class InstructorServiceTest {
         verify(instructorRepository,times(1)).findById("1");
     }
 
+    @Test
+    void testSaveSuccess() {
+        // Given
+        Instructor newInstructor = new Instructor();
+        newInstructor.setName("hien");
+        newInstructor.setStatus(ActiveStatus.IS_ACTIVE);
 
+        given(this.instructorRepository.save(newInstructor)).willReturn(newInstructor);
+
+        // When
+        Instructor savedIns = this.instructorService.save(newInstructor);
+
+        // Then
+        assertThat(savedIns.getName()).isEqualTo("hien");
+        assertThat(savedIns.getStatus()).isEqualTo(ActiveStatus.IS_ACTIVE);
+        verify(this.instructorRepository, times(1)).save(newInstructor);
+    }
+
+    @Test
+    void testDeactivateSuccess() {
+        // Given
+        Instructor oldInstructor = new Instructor();
+        oldInstructor.setInstructorId("1");
+        oldInstructor.setName("alvie");
+        oldInstructor.setStatus(ActiveStatus.IS_ACTIVE);
+
+        Instructor update = new Instructor();
+        update.setName("alvie");
+        update.setStatus(ActiveStatus.IS_DEACTIVATED);
+
+        given(this.instructorRepository.findById("1")).willReturn(Optional.of(oldInstructor));
+        given(this.instructorRepository.save(oldInstructor)).willReturn(oldInstructor);
+
+        // When
+        Instructor updatedIns = this.instructorService.deactivate("1", "this is a test");
+
+        // Then
+        assertThat(updatedIns.getInstructorId()).isEqualTo("1");
+        assertThat(updatedIns.getName()).isEqualTo("alvie");
+        assertThat(updatedIns.getStatus()).isEqualTo(ActiveStatus.IS_DEACTIVATED);
+        verify(this.instructorRepository, times(1)).findById("1");
+        verify(this.instructorRepository, times(1)).save(oldInstructor);
+    }
+
+    @Test
+    void testDeactivatedNotFound() {
+        // Given
+        given(instructorRepository.findById("1")).willReturn(Optional.empty());
+
+        // When
+        Throwable thrown = catchThrowable(() -> {
+            Instructor returnedInstructor = instructorService.deactivate("1", "this is a test");
+        });
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find instructor with Id 1 :(");
+        verify(instructorRepository,times(1)).findById("1");
+    }
+
+    @Test
+    void testReactivateSuccess() {
+        // Given
+        Instructor oldInstructor = new Instructor();
+        oldInstructor.setInstructorId("1");
+        oldInstructor.setName("alvie");
+        oldInstructor.setStatus(ActiveStatus.IS_DEACTIVATED);
+
+        Instructor update = new Instructor();
+        update.setName("alvie");
+        update.setStatus(ActiveStatus.IS_ACTIVE);
+
+        given(this.instructorRepository.findById("1")).willReturn(Optional.of(oldInstructor));
+        given(this.instructorRepository.save(oldInstructor)).willReturn(oldInstructor);
+
+        // When
+        Instructor updatedIns = this.instructorService.reactivate("1");
+
+        // Then
+        assertThat(updatedIns.getInstructorId()).isEqualTo("1");
+        assertThat(updatedIns.getName()).isEqualTo("alvie");
+        assertThat(updatedIns.getStatus()).isEqualTo(ActiveStatus.IS_ACTIVE);
+        verify(this.instructorRepository, times(1)).findById("1");
+        verify(this.instructorRepository, times(1)).save(oldInstructor);
+    }
+
+    @Test
+    void testReactivatedNotFound() {
+        // Given
+        given(instructorRepository.findById("1")).willReturn(Optional.empty());
+
+        // When
+        Throwable thrown = catchThrowable(() -> {
+            Instructor returnedInstructor = instructorService.reactivate("1");
+        });
+
+        // Then
+        assertThat(thrown)
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find instructor with Id 1 :(");
+        verify(instructorRepository,times(1)).findById("1");
+    }
 }

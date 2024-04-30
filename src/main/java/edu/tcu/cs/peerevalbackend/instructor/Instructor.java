@@ -3,9 +3,7 @@ package edu.tcu.cs.peerevalbackend.instructor;
 import edu.tcu.cs.peerevalbackend.section.Section;
 import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.team.Team;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,6 +15,7 @@ import java.util.stream.Collectors;
 @Entity
 public class Instructor implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String instructorId;
 
     private String name;
