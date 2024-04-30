@@ -2,6 +2,8 @@ package edu.tcu.cs.peerevalbackend.section;
 
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,6 +19,11 @@ public class SectionService {
     public SectionService(SectionRepository sectionRepository) { //injection
         this.sectionRepository = sectionRepository;
     }
+
+    public List<Section> findAll() {
+        return sectionRepository.findAll();
+    }
+
     public Section findById(String sectionName) {
         return this.sectionRepository.findById(sectionName)
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
@@ -62,4 +69,7 @@ public class SectionService {
         return section.getActiveWeeks();
     }
 
+    public Page<Section> findAll(Pageable pageable) {
+        return this.sectionRepository.findAll(pageable);
+    }
 }
