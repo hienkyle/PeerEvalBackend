@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,13 +25,25 @@ public class InstructorController {
         this.instructorToInstructorDtoConverter = instructorToInstructorDtoConverter;
     }
 
-
-//    public Result inviteInstructors(){
-//        return null;
-//    }
+    /*
+     * Use case 18: Invite an instructor
+     *
+     * Name: Hien
+     *
+     * @param emails - a list of emails of instructors
+     *
+     * @return Result
+     *
+     * Note: NOT TESTED
+     */
+    @PostMapping("/invite")
+    public Result inviteInstructors(@Valid @RequestBody List<String> emails){
+        List<String> sentEmails = this.instructorService.invite(emails);
+        return new Result(true, StatusCode.SUCCESS, "Invite Success", sentEmails);
+    }
 
     /*
-     * Use case 18: Search for instructors using criteria
+     * Use case 21: Search for instructors using criteria
      *
      * Name: Hien
      *
@@ -59,7 +73,7 @@ public class InstructorController {
      * Note: NOT TESTED
      */
     @GetMapping("/{instructorId}")
-    public Result viewInstructor(@PathVariable String instructorId){
+    public Result findInstructorById(@PathVariable String instructorId){
         Instructor foundInstructor = this.instructorService.findById(instructorId);
         InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert(foundInstructor);
         return new Result(true, StatusCode.SUCCESS, "Find One Success", instructorDto);

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -21,7 +22,22 @@ public class InstructorService {
     }
 
     /*
-     * Use case 18: Search for instructors using criteria
+     * Use case 18: Invite an instructor
+     *
+     * Name: Hien
+     *
+     * @param emails - a list of emails of instructors
+     *
+     * @return List<String>
+     *
+     * Note: NOT TESTED
+     */
+    public List<String> invite(List<String> emails) {
+        return emails;
+    }
+
+    /*
+     * Use case 21: Search for instructors using criteria
      *
      * Name: Hien
      *
