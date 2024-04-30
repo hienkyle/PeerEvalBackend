@@ -125,7 +125,6 @@ public class TeamController {
         return new Result(true, StatusCode.SUCCESS, "Remove Instructor Success");
     }
 
-
     /*
     * Use case 7
     * Search by criteria
