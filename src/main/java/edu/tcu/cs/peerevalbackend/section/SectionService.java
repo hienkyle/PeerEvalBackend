@@ -4,10 +4,13 @@ import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -72,4 +75,21 @@ public class SectionService {
     public Page<Section> findAll(Pageable pageable) {
         return this.sectionRepository.findAll(pageable);
     }
+
+    public Page<Section> findByCriteria(Map<String, String> searchCriteria, Pageable pageable) {
+        //base spec to start with
+        Specification<Section> spec = Specification.where(null);
+
+        if(StringUtils.hasLength(searchCriteria.get("sectionName"))){
+            spec = spec.and(SectionSpecs.hasId(searchCriteria.get("sectionName")));
+        }
+
+        if(StringUtils.hasLength(searchCriteria.get("academicYear"))){
+            spec = spec.and(SectionSpecs.containsAcademicYear(searchCriteria.get("academicYear")));
+        }
+
+        return this.sectionRepository.findAll(spec, pageable);
+
+    }
+
 }

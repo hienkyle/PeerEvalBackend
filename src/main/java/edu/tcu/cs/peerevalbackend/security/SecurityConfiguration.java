@@ -67,6 +67,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, this.baseUrl + "/instructors/**").permitAll()
                         .requestMatchers(HttpMethod.POST, this.baseUrl + "instructors/search").permitAll()
                         .requestMatchers(HttpMethod.GET, this.baseUrl + "/section/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, this.baseUrl + "section/search").permitAll()
                         .requestMatchers(HttpMethod.GET, this.baseUrl + "/teams/**").permitAll()
                         .requestMatchers(HttpMethod.GET, this.baseUrl + "/student/**").permitAll()
                         .requestMatchers(HttpMethod.GET, this.baseUrl + "/users/**").hasAuthority("ROLE_admin") // protect the endpoint

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -79,6 +80,13 @@ public class SectionController {
     public Result getActiveWeeks(@PathVariable String sectionName) {
         List<Date> activeWeeks = sectionService.getActiveWeeks(sectionName);
         return new Result(true, StatusCode.SUCCESS, "Active weeks retrieved successfully for section: " + sectionName, activeWeeks);
+    }
+
+    @PostMapping("/search")
+    public Result findSectionsByCriteria(@RequestBody Map<String, String> searchCriteria, Pageable pageable) {
+        Page<Section> sectionPage =  this.sectionService.findByCriteria(searchCriteria, pageable);
+        Page<SectionDto> sectionDtoPage = sectionPage.map(this.sectionToSectionDtoConverter::convert);
+        return new Result(true, StatusCode.SUCCESS, "Search Success", sectionDtoPage);
     }
 }
 
