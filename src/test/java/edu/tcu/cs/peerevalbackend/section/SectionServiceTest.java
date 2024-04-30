@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,8 +29,31 @@ class SectionServiceTest {
     @InjectMocks //inject the mock into this object
     SectionService sectionService;
 
+    List<Section> sections;
+
     @BeforeEach
     void setUp() {
+
+        this.sections = new ArrayList<>();
+
+        Section s1 = new Section();
+        s1.setSectionName("Section 1");
+        s1.setAcademicYear("2023-2024");
+        s1.setFirstAndLastDate("8/21/23 and 5/01/24");
+        s1.setTeams(null);
+        s1.setInstructors(null);
+        s1.setStudents(null);
+        this.sections.add(s1);
+
+        Section s2 = new Section();
+        s2.setSectionName("Section 2");
+        s2.setAcademicYear("2023-2024");
+        s2.setFirstAndLastDate("8/21/23 and 5/01/24");
+        s2.setTeams(null);
+        s2.setInstructors(null);
+        s2.setStudents(null);
+        this.sections.add(s2);
+
     }
 
     @AfterEach
@@ -36,15 +61,24 @@ class SectionServiceTest {
     }
 
     @Test
+    void testFindAllSuccess() {
+        //given
+        given(this.sectionRepository.findAll()).willReturn(this.sections);
+
+        //when
+        List<Section> actualSections = this.sectionService.findAll();
+
+        //then
+        assertThat(actualSections.size()).isEqualTo(this.sections.size());
+
+        //verify
+        verify(this.sectionRepository, times(1)).findAll();
+
+    }
+
+    @Test
     void testFindByIdSuccess() {
         //given. arrange inputs and targets. define the behavior of Mock object sectionRepository
-
-//        {
-//        "name": "Section 1",
-//        “academicYear”: "2023-2024",
-//        “firstAndLastDate: "8/21/23 and 5/01/24"
-//        }
-
         Section s = new Section();
         s.setSectionName("Section 1");
         s.setAcademicYear("2023-2024");

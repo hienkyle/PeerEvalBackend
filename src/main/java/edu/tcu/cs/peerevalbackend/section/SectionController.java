@@ -7,10 +7,13 @@ import edu.tcu.cs.peerevalbackend.system.Result;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/peerEval/section")
@@ -25,6 +28,15 @@ public class SectionController {
         this.sectionService = sectionService;
         this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
         this.sectionDtoToSectionConverter = sectionDtoToSectionConverter;
+    }
+
+    @GetMapping
+    public Result findAllSections(Pageable pageable) {
+        Page<Section> sectionPage = this.sectionService.findAll(pageable);
+        //convert sectionPage to a page of sectionDtos
+        Page<SectionDto> sectionDtosPage = sectionPage
+                .map(this.sectionToSectionDtoConverter::convert);
+        return new Result(true, StatusCode.SUCCESS, "Find All Success", sectionDtosPage);
     }
 
     @GetMapping("/{sectionName}")

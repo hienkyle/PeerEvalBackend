@@ -9,6 +9,7 @@ import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevalbackend.team.Team;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,19 +68,27 @@ class SectionControllerTest {
         s1.setSectionName("Section 1");
         s1.setAcademicYear("2023-2024");
         s1.setFirstAndLastDate("8/21/23 and 5/01/24");
-
+        s1.setTeams(null);
+        s1.setInstructors(null);
+        s1.setStudents(null);
         this.sections.add(s1);
 
         Section s2 = new Section();
         s2.setSectionName("Section 2");
         s2.setAcademicYear("2023-2024");
         s2.setFirstAndLastDate("8/21/23 and 5/01/24");
+        s2.setTeams(null);
+        s2.setInstructors(null);
+        s2.setStudents(null);
         this.sections.add(s2);
 
         Section s3 = new Section();
         s3.setSectionName("Section 3");
         s3.setAcademicYear("2023-2024");
         s3.setFirstAndLastDate("8/21/23 and 5/01/24");
+        s3.setTeams(null);
+        s3.setInstructors(null);
+        s3.setStudents(null);
         this.sections.add(s3);
 
         //team set up
@@ -161,6 +176,39 @@ class SectionControllerTest {
 
     @AfterEach
     void tearDown() {
+    }
+
+    @Test
+    void testFindAllSectionsSuccess() throws Exception {
+        //given
+        Sort sort = Sort.by(
+                Sort.Order.asc("sectionName"),  // Sort section name in ascending order
+                Sort.Order.desc("academicYear") // Sort academic year in descending order
+        );
+
+        Pageable pageable = PageRequest.of(0, 10, sort); //10 sections per page
+        PageImpl<Section> sectionPage = new PageImpl<>(this.sections, pageable, this.sections.size());
+
+        given(this.sectionService.findAll(Mockito.any(Pageable.class))).willReturn(sectionPage);
+
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("page", "0");
+        requestParams.add("size", "10");
+        requestParams.add("sort", "sectionName,academicYear,desc");
+        //can add sorting
+
+        //when & then
+        this.mockMvc.perform(get("/sections").accept(MediaType.APPLICATION_JSON).params(requestParams))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find All Success"))
+                .andExpect(jsonPath("$.data.content", Matchers.hasSize(this.sections.size())))
+                .andExpect(jsonPath("$.data.content[0].id").value("Section 1"))
+                .andExpect(jsonPath("$.data.content[0].academicYear").value("2023-2024"))
+                .andExpect(jsonPath("$.data.content[0].firstAndLastDate").value("8/21/23 and 5/01/24"))
+                .andExpect(jsonPath("$.data.content[0].teams").exists())
+                .andExpect(jsonPath("$.data.content[0].instructors").exists())
+                .andExpect(jsonPath("$.data.content[0].students").exists());
     }
 
     @Test
