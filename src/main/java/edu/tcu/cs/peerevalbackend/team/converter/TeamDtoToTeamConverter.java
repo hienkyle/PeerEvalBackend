@@ -55,7 +55,7 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
 
         //Need to fix this
         if(source.sectionName() != null) {
-            team.setSectionName(this.sectionRepository.findById(source.sectionName()).orElse(null));
+            team.setSection(this.sectionRepository.findById(source.sectionName()).orElse(null));
         }
 
         return team;

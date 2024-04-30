@@ -95,21 +95,21 @@ class SectionControllerTest {
         Team team1 = new Team();
         team1.setTeamName("Team 1");
         team1.setAcademicYear("2023-2024");
-        team1.setSectionName(null);
+        team1.setSection(null);
         team1.setInstructors(null);
         this.teams.add(team1);
 
         Team team2 = new Team();
         team2.setTeamName("Team 2");
         team2.setAcademicYear("2023-2024");
-        team2.setSectionName(null);
+        team2.setSection(null);
         team2.setInstructors(null);
         this.teams.add(team2);
 
         Team team3 = new Team();
         team3.setTeamName("Team 3");
         team3.setAcademicYear("2023-2024");
-        team3.setSectionName(null);
+        team3.setSection(null);
         team3.setInstructors(null);
         this.teams.add(team3);
 

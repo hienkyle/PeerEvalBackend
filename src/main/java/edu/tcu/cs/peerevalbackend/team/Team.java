@@ -17,7 +17,7 @@ public class Team implements Serializable {
     * **** Confirmed with Maribel ****
     * Has an error because Section is not annotated with the type of relationship
     * Ensure there is a field List<Team> teams in Section
-    * Ensure field in Section class is annotated w/ @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "sectionName")
+    * Ensure field in Section class is annotated w/ @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "section")
     */
     @ManyToOne
     private Section section;

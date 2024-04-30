@@ -49,7 +49,7 @@ public class TeamServiceTest {
         team.setAcademicYear("2023-2024");
         team.setInstructors(null);
         team.setStudents(null);
-        team.setSectionName(null);
+        team.setSection(null);
 
         //Given
         /*
@@ -72,7 +72,7 @@ public class TeamServiceTest {
         assertThat(returnedTeam.getAcademicYear()).isEqualTo(team.getAcademicYear());
         assertThat(returnedTeam.getInstructors()).isEqualTo(team.getInstructors());
         assertThat(returnedTeam.getStudents()).isEqualTo(team.getStudents());
-        assertThat(returnedTeam.getSectionName()).isEqualTo(team.getSectionName());
+        assertThat(returnedTeam.getSection()).isEqualTo(team.getSection());
 
         /*
         * Verify that the findById method was called once with the correct parameter
@@ -109,7 +109,7 @@ public class TeamServiceTest {
         newTeam.setAcademicYear("2023-2024");
         newTeam.setInstructors(null);
         newTeam.setStudents(null);
-        newTeam.setSectionName(null);
+        newTeam.setSection(null);
 
         //Given
         given(teamRepository.save(newTeam)).willReturn(newTeam);
@@ -122,7 +122,7 @@ public class TeamServiceTest {
         assertThat(savedTeam.getAcademicYear()).isEqualTo(newTeam.getAcademicYear());
         assertThat(savedTeam.getInstructors()).isEqualTo(newTeam.getInstructors());
         assertThat(savedTeam.getStudents()).isEqualTo(newTeam.getStudents());
-        assertThat(savedTeam.getSectionName()).isEqualTo(newTeam.getSectionName());
+        assertThat(savedTeam.getSection()).isEqualTo(newTeam.getSection());
         verify(teamRepository, times(1)).save(newTeam);
     }
 
@@ -134,7 +134,7 @@ public class TeamServiceTest {
         oldTeam.setAcademicYear("2023-2024");
         oldTeam.setInstructors(null);
         oldTeam.setStudents(null);
-        oldTeam.setSectionName(null);
+        oldTeam.setSection(null);
 
         //Set up update team
         Team update = new Team();
@@ -142,7 +142,7 @@ public class TeamServiceTest {
         update.setAcademicYear("2024-2025"); //Change academic year
         update.setInstructors(null);
         update.setStudents(null);
-        update.setSectionName(null);
+        update.setSection(null);
 
         //Given
         /*
@@ -155,7 +155,7 @@ public class TeamServiceTest {
         Team updatedTeam = teamService.update("Team 1", update);
 
         //then
-        assertThat(updatedTeam.getSectionName()).isEqualTo(update.getSectionName());
+        assertThat(updatedTeam.getSection()).isEqualTo(update.getSection());
         assertThat(updatedTeam.getAcademicYear()).isEqualTo(updatedTeam.getAcademicYear());
         verify(teamRepository, times(1)).findById("Team 1");
         verify(teamRepository, times(1)).save(oldTeam);
@@ -169,7 +169,7 @@ public class TeamServiceTest {
         update.setAcademicYear("2024-2025"); //Change academic year
         update.setInstructors(null);
         update.setStudents(null);
-        update.setSectionName(null);
+        update.setSection(null);
 
         //Given
         given(teamRepository.findById("Team 1")).willReturn(Optional.empty());
@@ -191,7 +191,7 @@ public class TeamServiceTest {
         team.setAcademicYear("2023-2024");
         team.setInstructors(null);
         team.setStudents(null);
-        team.setSectionName(null);
+        team.setSection(null);
 
         //Given
         given(teamRepository.findById("Team 1")).willReturn(Optional.of(team));
@@ -247,7 +247,7 @@ public class TeamServiceTest {
         team1.setAcademicYear("2023-2024");
         team1.setInstructors(null);
         team1.setStudents(team1Students);
-        team1.setSectionName(null);
+        team1.setSection(null);
 
         /*
         * Doesn't seem like I really need this but just for sake of completeness
@@ -264,7 +264,7 @@ public class TeamServiceTest {
         team2.setAcademicYear("2023-2024");
         team2.setInstructors(null);
         team2.setStudents(team2Students);
-        team2.setSectionName(null);
+        team2.setSection(null);
 
         //Given
         given(this.studentRepository.findById(1)).willReturn(Optional.of(stu1));
@@ -303,7 +303,7 @@ public class TeamServiceTest {
         team1.setAcademicYear("2023-2024");
         team1.setInstructors(null);
         team1.setStudents(team1Students);
-        team1.setSectionName(null);
+        team1.setSection(null);
 
         /*
         * Set the team for student
@@ -368,7 +368,7 @@ public class TeamServiceTest {
         team1.setAcademicYear("2023-2024");
         team1.setInstructors(team1Instructors);
         team1.setStudents(null);
-        team1.setSectionName(null);
+        team1.setSection(null);
 
         //Create a list of teams for instructor
         List<Team> instructorTeams = new ArrayList<>();
@@ -386,7 +386,7 @@ public class TeamServiceTest {
         team2.setAcademicYear("2023-2024");
         team2.setInstructors(team2Instructors);
         team2.setStudents(null);
-        team2.setSectionName(null);
+        team2.setSection(null);
 
         //Given
         given(this.instructorRepository.findById("1")).willReturn(Optional.of(i1));
@@ -426,7 +426,7 @@ public class TeamServiceTest {
         team1.setAcademicYear("2023-2024");
         team1.setInstructors(team1Instructors);
         team1.setStudents(null);
-        team1.setSectionName(null);
+        team1.setSection(null);
 
         //Create a list of teams for instructor
         List<Team> instructorTeams = new ArrayList<>();
@@ -494,7 +494,7 @@ public class TeamServiceTest {
         team1.setAcademicYear("2023-2024");
         team1.setInstructors(null);
         team1.setStudents(team1Students);
-        team1.setSectionName(null);
+        team1.setSection(null);
 
         /*
          * Set the team for student
@@ -583,7 +583,7 @@ public class TeamServiceTest {
         team1.setAcademicYear("2023-2024");
         team1.setInstructors(team1Instructors);
         team1.setStudents(null);
-        team1.setSectionName(null);
+        team1.setSection(null);
 
         //Create a list of teams for instructor
         List<Team> instructorTeams = new ArrayList<>();

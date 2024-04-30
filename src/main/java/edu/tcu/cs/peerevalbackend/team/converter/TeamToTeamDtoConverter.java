@@ -1,11 +1,7 @@
 package edu.tcu.cs.peerevalbackend.team.converter;
 
-import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.instructor.converter.InstructorToInstructorDtoConverter;
 import edu.tcu.cs.peerevalbackend.instructor.dto.InstructorDto;
-import edu.tcu.cs.peerevalbackend.section.SectionRepository;
-import edu.tcu.cs.peerevalbackend.section.converter.SectionToSectionDtoConverter;
-import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.student.converter.StudentToStudentDtoConverter;
 import edu.tcu.cs.peerevalbackend.student.dto.StudentDto;
 import edu.tcu.cs.peerevalbackend.team.Team;
@@ -58,16 +54,9 @@ public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
                 source.getAcademicYear(),
                 instructorDtos,
                 studentsDtos,
-                source.getSectionName() != null
-                        ? source.getSectionName().getSectionName()
+                source.getSection() != null
+                        ? source.getSection().getSectionName()
                         : null);
         return teamDto;
     }
-
-    /*
-    * source.getSectionName() != null
-                        ? this.sectionToSectionDtoConverter.convert(source.getSectionName())
-                        : null
-    */
-
 }
