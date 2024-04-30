@@ -31,6 +31,6 @@ public record TeamDto(@NotEmpty(message = "Team name is required.")
                       List<StudentDto> studentDtos,
 
                       //Change to SectionDto
-                      SectionDto sectionDto) {
+                      String sectionName) {
 }
 

@@ -3,6 +3,7 @@ package edu.tcu.cs.peerevalbackend.team.converter;
 import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.instructor.converter.InstructorToInstructorDtoConverter;
 import edu.tcu.cs.peerevalbackend.instructor.dto.InstructorDto;
+import edu.tcu.cs.peerevalbackend.section.SectionRepository;
 import edu.tcu.cs.peerevalbackend.section.converter.SectionToSectionDtoConverter;
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.student.converter.StudentToStudentDtoConverter;
@@ -18,12 +19,10 @@ import java.util.List;
 //Make changes
 @Component
 public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
-    private final SectionToSectionDtoConverter sectionToSectionDtoConverter;
     private final InstructorToInstructorDtoConverter instructorToInstructorDtoConverter;
     private final StudentToStudentDtoConverter studentToStudentDtoConverter;
 
-    public TeamToTeamDtoConverter(SectionToSectionDtoConverter sectionToSectionDtoConverter, InstructorToInstructorDtoConverter instructorToInstructorDtoConverter, StudentToStudentDtoConverter studentToStudentDtoConverter) {
-        this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
+    public TeamToTeamDtoConverter(InstructorToInstructorDtoConverter instructorToInstructorDtoConverter, StudentToStudentDtoConverter studentToStudentDtoConverter) {
         this.instructorToInstructorDtoConverter = instructorToInstructorDtoConverter;
         this.studentToStudentDtoConverter = studentToStudentDtoConverter;
     }
@@ -60,9 +59,15 @@ public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
                 instructorDtos,
                 studentsDtos,
                 source.getSectionName() != null
-                        ? this.sectionToSectionDtoConverter.convert(source.getSectionName())
+                        ? source.getSectionName().getSectionName()
                         : null);
         return teamDto;
     }
+
+    /*
+    * source.getSectionName() != null
+                        ? this.sectionToSectionDtoConverter.convert(source.getSectionName())
+                        : null
+    */
 
 }
