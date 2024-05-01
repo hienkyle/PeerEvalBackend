@@ -27,9 +27,9 @@ public class RubricController {
     public Result findSectionById(@PathVariable String rubricName) {
         Rubric foundRubric = this.rubricService.findById(rubricName);
         RubricDto rubricDto = this.rubricToRubricDtoConverter.convert(foundRubric);
-        return new Result(true, StatusCode.SUCCESS, "Find One SUccess", rubricDto);
+        return new Result(true, StatusCode.SUCCESS, "Find One Success", rubricDto);
     }
-
+    @PostMapping()
     public Result addRubric(@Valid @RequestBody RubricDto rubricDto) {
         Rubric newRubric = this.rubricDtoToRubricConverter.convert(rubricDto);
         Rubric savedRubric = this.rubricService.save(newRubric);

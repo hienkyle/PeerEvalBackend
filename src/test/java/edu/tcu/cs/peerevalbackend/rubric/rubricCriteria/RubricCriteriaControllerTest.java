@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false) // Turn off Spring Security
 public class RubricCriteriaControllerTest {
 
     @Autowired
@@ -79,7 +79,7 @@ public class RubricCriteriaControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
-                .andExpect(jsonPath("$.data.id").value(1));
+                .andExpect(jsonPath("$.data.criteriaNum").value(1));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class RubricCriteriaControllerTest {
         this.mockMvc.perform(get("/peerEval/rubricCriteria/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find Criteria with Id 1"))
+                .andExpect(jsonPath("$.message").value("Could not find rubricCriteria with Id 1 :("))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
@@ -114,11 +114,11 @@ public class RubricCriteriaControllerTest {
         given(this.rubricCriteriaService.save(Mockito.any(RubricCriteria.class))).willReturn(savedRubricCriteria);
 
         //when & then
-        this.mockMvc.perform(post("peerEval/rubricCriteria").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(post("/peerEval/rubricCriteria").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
-                .andExpect(jsonPath("$.message").value("Add Criteria success"))
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.message").value("Add Success"))
+                .andExpect(jsonPath("$.data.criteriaNum").isNotEmpty())
                 .andExpect(jsonPath("$.data.criteriaName").value(savedRubricCriteria.getCriteriaName()))
                 .andExpect(jsonPath("$.data.criteriaDesc").value(savedRubricCriteria.getCriteriaDesc()))
                 .andExpect(jsonPath("$.data.criteriaMaxScore").value(savedRubricCriteria.getCriteriaMaxScore()));

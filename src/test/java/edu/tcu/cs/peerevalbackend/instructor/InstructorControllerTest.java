@@ -44,7 +44,6 @@ class InstructorControllerTest {
     @BeforeEach
     void setUp() {
         instructors = new ArrayList<>();
-
         Instructor i1 = new Instructor();
         i1.setInstructorId("1");
         i1.setName("alvie");
@@ -96,9 +95,8 @@ class InstructorControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
                 .andExpect(jsonPath("$.data.instructorId").value("1"))
-                .andExpect(jsonPath("$.data.name").value("alive"))
-                .andExpect(jsonPath("$.data.status").value(ActiveStatus.IS_ACTIVE))
-                .andExpect(jsonPath("$.data.teamNames.content", Matchers.hasSize(this.instructors.get(0).getTeams().size())));
+                .andExpect(jsonPath("$.data.name").value("alvie"))
+                .andExpect(jsonPath("$.data.status").value("IS_ACTIVE"));
     }
 
     @Test

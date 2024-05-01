@@ -87,7 +87,7 @@ public class TeamController {
      * Order of parameters matters
      * Whatever is in {} will be assigned to parameters, which is why order matters
      */
-    @PutMapping("/{teamName}/students/{studentId}")
+    @PutMapping("/{teamName}/assign/students/{studentId}")
     public Result assignStudent(@PathVariable String teamName, @PathVariable Integer studentId) {
         this.teamService.assignStudent(teamName, studentId);
         return new Result(true, StatusCode.SUCCESS, "Student Assignment Success");
@@ -97,7 +97,7 @@ public class TeamController {
      * Use case 14
      * Make sure the annotation is correct
      */
-    @PutMapping("/{teamName}/students/{studentId}")
+    @PutMapping("/{teamName}/remove/students/{studentId}")
     public Result removeStudent(@PathVariable String teamName, @PathVariable Integer studentId) {
         this.teamService.removeStudent(teamName, studentId);
         return new Result(true, StatusCode.SUCCESS, "Remove Student Success");
@@ -109,7 +109,7 @@ public class TeamController {
      * Order of parameters matters
      * Whatever is in {} will be assigned to parameters, which is why order matters
      */
-    @PutMapping("/{teamName}/instructors/{instructorId}")
+    @PutMapping("/{teamName}/assign/instructors/{instructorId}")
     public Result assignInstructor(@PathVariable String teamName, @PathVariable String instructorId) {
         this.teamService.assignInstructor(teamName, instructorId);
         return new Result(true, StatusCode.SUCCESS, "Instructor Assignment Success");
@@ -119,7 +119,7 @@ public class TeamController {
      * Use case 20
      * Make sure the annotation is correct
      */
-    @PutMapping("/{teamName}/instructors/{instructorId}")
+    @PutMapping("/{teamName}/remove/instructors/{instructorId}")
     public Result removeInstructor(@PathVariable String teamName, @PathVariable String instructorId) {
         this.teamService.removeInstructor(teamName, instructorId);
         return new Result(true, StatusCode.SUCCESS, "Remove Instructor Success");

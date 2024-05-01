@@ -31,7 +31,7 @@ public class SectionController {
         this.sectionDtoToSectionConverter = sectionDtoToSectionConverter;
     }
 
-    @GetMapping
+    @GetMapping()
     public Result findAllSections(Pageable pageable) {
         Page<Section> sectionPage = this.sectionService.findAll(pageable);
         //convert sectionPage to a page of sectionDtos

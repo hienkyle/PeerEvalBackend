@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false) // Turn off Spring Security
 class SectionControllerTest {
 
     @Autowired
@@ -63,6 +63,8 @@ class SectionControllerTest {
     void setUp() {
         //section set up
         this.sections = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.instructors = new ArrayList<>();
 
         Section s1 = new Section();
         s1.setSectionName("Section 1");
@@ -198,17 +200,17 @@ class SectionControllerTest {
         //can add sorting
 
         //when & then
-        this.mockMvc.perform(get("/sections").accept(MediaType.APPLICATION_JSON).params(requestParams))
+        this.mockMvc.perform(get("/peerEval/section").accept(MediaType.APPLICATION_JSON).params(requestParams))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find All Success"))
                 .andExpect(jsonPath("$.data.content", Matchers.hasSize(this.sections.size())))
-                .andExpect(jsonPath("$.data.content[0].id").value("Section 1"))
+                .andExpect(jsonPath("$.data.content[0].sectionName").value("Section 1"))
                 .andExpect(jsonPath("$.data.content[0].academicYear").value("2023-2024"))
                 .andExpect(jsonPath("$.data.content[0].firstAndLastDate").value("8/21/23 and 5/01/24"))
-                .andExpect(jsonPath("$.data.content[0].teams").exists())
-                .andExpect(jsonPath("$.data.content[0].instructors").exists())
-                .andExpect(jsonPath("$.data.content[0].students").exists());
+                .andExpect(jsonPath("$.data.content[0].teamDtos").isEmpty())
+                .andExpect(jsonPath("$.data.content[0].instructorDtos").isEmpty())
+                .andExpect(jsonPath("$.data.content[0].studentDtos").isEmpty());
     }
 
     @Test
@@ -221,7 +223,7 @@ class SectionControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
-                .andExpect(jsonPath("$.data.id").value("Section 1"));
+                .andExpect(jsonPath("$.data.sectionName").value("Section 1"));
     } //will the last '.andExpect' be $.data.id or $.data.sectionName
 
     @Test
@@ -233,7 +235,7 @@ class SectionControllerTest {
         this.mockMvc.perform(get("/peerEval/section/Section 1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find section with Id Section 1"))
+                .andExpect(jsonPath("$.message").value("Could not find section with Id Section 1 :("))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
@@ -264,12 +266,12 @@ class SectionControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.data.sectionName").isNotEmpty())
                 .andExpect(jsonPath("$.data.academicYear").value(savedSection.getAcademicYear()))
                 .andExpect(jsonPath("$.data.firstAndLastDate").value(savedSection.getFirstAndLastDate()))
-                .andExpect(jsonPath("$.data.teams").value(savedSection.getTeams()))
-                .andExpect(jsonPath("$.data.instructors").value(savedSection.getInstructors()))
-                .andExpect(jsonPath("$.data.students").value(savedSection.getStudents()));
+                .andExpect(jsonPath("$.data.teamDtos").value(savedSection.getTeams()))
+                .andExpect(jsonPath("$.data.instructorDtos").value(savedSection.getInstructors()))
+                .andExpect(jsonPath("$.data.studentDtos").value(savedSection.getStudents()));
     }
 
     @Test
@@ -299,12 +301,12 @@ class SectionControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Update Success"))
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.data.sectionName").isNotEmpty())
                 .andExpect(jsonPath("$.data.academicYear").value(updatedSection.getAcademicYear()))
                 .andExpect(jsonPath("$.data.firstAndLastDate").value(updatedSection.getFirstAndLastDate()))
-                .andExpect(jsonPath("$.data.teams").value(updatedSection.getTeams()))
-                .andExpect(jsonPath("$.data.instructors").value(updatedSection.getInstructors()))
-                .andExpect(jsonPath("$.data.students").value(updatedSection.getStudents()));
+                .andExpect(jsonPath("$.data.teamDtos").value(updatedSection.getTeams()))
+                .andExpect(jsonPath("$.data.instructorDtos").value(updatedSection.getInstructors()))
+                .andExpect(jsonPath("$.data.studentDtos").value(updatedSection.getStudents()));
     }
 
     @Test

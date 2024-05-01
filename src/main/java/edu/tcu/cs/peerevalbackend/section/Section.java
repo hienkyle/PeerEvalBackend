@@ -21,7 +21,7 @@ public class Section implements Serializable {
 
     //collection/list of teams it 'owns'; mapped by value has to be the same as the many side value name
     //the one side, Section, gives up responsibility of maintaining the foreign key (many side (Team) will store the FK), ORM will be used so that references become FK
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "sectionName")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "section")
     private List<Team> teams;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "instructorId")

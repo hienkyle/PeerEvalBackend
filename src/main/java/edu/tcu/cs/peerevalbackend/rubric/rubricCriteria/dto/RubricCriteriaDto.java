@@ -12,6 +12,5 @@ public record RubricCriteriaDto(
         @NotEmpty(message = "description is required.")
         String criteriaDesc,
 
-        @NotEmpty(message = "max score is required.")
         Integer criteriaMaxScore) {
 }

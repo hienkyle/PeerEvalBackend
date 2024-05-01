@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/peereval/student")
+@RequestMapping("/peerEval/student")
 public class StudentController {
 
     private final StudentService studentService;

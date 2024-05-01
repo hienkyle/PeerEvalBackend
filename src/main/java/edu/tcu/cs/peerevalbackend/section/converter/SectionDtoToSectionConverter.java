@@ -8,6 +8,7 @@ import edu.tcu.cs.peerevalbackend.team.converter.TeamDtoToTeamConverter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,13 +35,27 @@ public class SectionDtoToSectionConverter implements Converter<SectionDto, Secti
         section.setSectionName(source.sectionName());
         section.setAcademicYear(source.academicYear());
         section.setFirstAndLastDate(source.firstAndLastDate());
-        section.setTeams(source.teamDtos().stream()
-                .map(teamDtoToTeamConverter::convert).collect(Collectors.toList()));
-        section.setInstructors(source.instructorDtos().stream()
-                .map(instructorDtoToInstructorConverter::convert).collect(Collectors.toList()));
-        section.setStudents(source.studentDtos().stream()
-                .map(studentDtoToStudentConverter::convert).collect(Collectors.toList()));
-
+        if(source.teamDtos() != null) {
+            section.setTeams(source.teamDtos().stream()
+                    .map(teamDtoToTeamConverter::convert).collect(Collectors.toList()));
+        }
+        else{
+            section.setTeams(new ArrayList<>());
+        }
+        if(source.instructorDtos() != null) {
+            section.setInstructors(source.instructorDtos().stream()
+                    .map(instructorDtoToInstructorConverter::convert).collect(Collectors.toList()));
+        }
+        else{
+            section.setInstructors(new ArrayList<>());
+        }
+        if(source.studentDtos() != null) {
+            section.setStudents(source.studentDtos().stream()
+                    .map(studentDtoToStudentConverter::convert).collect(Collectors.toList()));
+        }
+        else{
+            section.setInstructors(new ArrayList<>());
+        }
         return section;
     }
 

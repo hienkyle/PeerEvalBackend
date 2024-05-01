@@ -10,10 +10,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class InstructorToInstructorDtoConverter implements Converter<Instructor, InstructorDto> {
-    private final TeamToTeamDtoConverter teamToTeamDtoConverter;
 
-    public InstructorToInstructorDtoConverter(TeamToTeamDtoConverter teamToTeamDtoConverter) {
-        this.teamToTeamDtoConverter = teamToTeamDtoConverter;
+    public InstructorToInstructorDtoConverter() {
+
     }
 
     @Override
