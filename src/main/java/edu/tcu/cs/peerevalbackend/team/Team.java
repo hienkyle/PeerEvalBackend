@@ -47,8 +47,13 @@ public class Team implements Serializable {
 
     String academicYear;
 
-    //Dr. Wei has an empty constructor
+    //Dr. Wei has an empty constructor, but I don't, it appears that I needed to initialize some of my variables
     public Team() {
+        teamName = "";
+        section = new Section();
+        instructors = new ArrayList<>();
+        students = new ArrayList<>();
+        academicYear = "";
     }
 
     //Dr. Wei does not have an overloaded constructor, I included it just in case

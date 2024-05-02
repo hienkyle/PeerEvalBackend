@@ -14,6 +14,7 @@ import edu.tcu.cs.peerevalbackend.instructor.converter.InstructorDtoToInstructor
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //Make changes
 @Component
@@ -33,29 +34,32 @@ public class TeamDtoToTeamConverter implements Converter<TeamDto, Team> {
      */
     @Override
     public Team convert(TeamDto source) {
+        if(source == null) {
+            return null; //Handle null input gracefully
+        }
+
         Team team = new Team();
         team.setTeamName(source.teamName());
         team.setAcademicYear(source.academicYear());
 
-        List<Instructor> instructors = new ArrayList<>();
-        if(!source.instructorDtos().isEmpty()) {
-            for(int i = 0; i < source.instructorDtos().size(); i++) {
-                instructors.add(instructorDtoToInstructorConverter.convert(source.instructorDtos().get(i)));
-            }
-            team.setInstructors(instructors);
+        if(source.instructorDtos() != null) {
+            team.setInstructors(source.instructorDtos().stream()
+                    .map(instructorDtoToInstructorConverter::convert).collect(Collectors.toList()));
+        } else {
+            team.setInstructors(new ArrayList<>());
         }
 
-        List<Student> students = new ArrayList<>();
-        if(!source.studentDtos().isEmpty()) {
-            for(int i = 0; i < source.studentDtos().size(); i++) {
-                students.add(studentDtoToStudentConverter.convert(source.studentDtos().get(i)));
-            }
-            team.setStudents(students);
+        if(source.studentDtos() != null) {
+            team.setStudents(source.studentDtos().stream()
+                    .map(studentDtoToStudentConverter::convert).collect(Collectors.toList()));
+        } else {
+            team.setStudents(new ArrayList<>());
         }
 
-        //Need to fix this
         if(source.sectionName() != null) {
             team.setSection(this.sectionRepository.findById(source.sectionName()).orElse(null));
+        } else {
+            team.setSection(null);
         }
 
         return team;

@@ -7,6 +7,8 @@ import edu.tcu.cs.peerevalbackend.section.dto.SectionDto;
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.student.dto.StudentDto;
 import jakarta.validation.constraints.NotEmpty;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public record TeamDto(@NotEmpty(message = "Team name is required.")
                       String teamName,
 
+                      @NotEmpty(message = "Academic year is required.")
                       String academicYear,
 
                       /*

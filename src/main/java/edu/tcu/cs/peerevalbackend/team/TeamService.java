@@ -161,6 +161,10 @@ public class TeamService {
             teamWhereStuDel.removeInstructor(instructorToBeDeleted);
         }
     }
+
+    /*
+    * Honestly, idk what this is for
+    */
     public Page<Team> findAll(Pageable pageable) {
         return this.teamRepository.findAll(pageable);
     }
