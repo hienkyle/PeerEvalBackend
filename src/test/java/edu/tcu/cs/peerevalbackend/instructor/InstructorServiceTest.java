@@ -72,6 +72,20 @@ class InstructorServiceTest {
     }
 
     @Test
+    void testInviteSuccess(){
+        // Given
+        List<String> emails = new ArrayList<>();
+        emails.add("alvie@gmail.com");
+        emails.add("maribel@gmail.com");
+
+        // When
+        List<String> sentEmails = instructorService.invite(emails);
+
+        // Then
+        assertThat(sentEmails).isEqualTo(emails);
+    }
+
+    @Test
     void testFindByIdSuccess() {
         // Given
         Instructor i= new Instructor();
