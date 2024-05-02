@@ -42,6 +42,45 @@ public class TeamServiceTest {
     }
 
     @Test
+    void testFindAllSuccess() {
+        List<Team> teams = new ArrayList<>();
+
+        //Team set up
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2023-2024");
+        team1.setSection(null);
+        team1.setInstructors(null);
+        teams.add(team1);
+
+        Team team2 = new Team();
+        team2.setTeamName("Team 2");
+        team2.setAcademicYear("2023-2024");
+        team2.setSection(null);
+        team2.setInstructors(null);
+        teams.add(team2);
+
+        Team team3 = new Team();
+        team3.setTeamName("Team 3");
+        team3.setAcademicYear("2023-2024");
+        team3.setSection(null);
+        team3.setInstructors(null);
+        teams.add(team3);
+
+        //Given
+        given(teamRepository.findAll()).willReturn(teams);
+
+        //When
+        List<Team> actualTeams = teamService.findAll();
+
+        //Then
+        assertThat(actualTeams.size()).isEqualTo(teams.size());
+
+        //Verify
+        verify(teamRepository, times(1)).findAll();
+    }
+
+    @Test
     void testFindByNameSuccess() {
         //Set up a team
         Team team = new Team();

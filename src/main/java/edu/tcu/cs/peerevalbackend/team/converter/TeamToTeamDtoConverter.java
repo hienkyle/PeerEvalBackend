@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //Make changes
 @Component
@@ -28,32 +29,13 @@ public class TeamToTeamDtoConverter implements Converter<Team, TeamDto> {
     */
     @Override
     public TeamDto convert(Team source) {
-        /*
-        * Convert each instructor to instructor dto
-        */
-        List<InstructorDto> instructorDtos = new ArrayList<>();
-        if(!source.getInstructors().isEmpty()) {
-            for(int i = 0; i < source.getNumberOfInstructors(); i++) {
-                instructorDtos.add(instructorToInstructorDtoConverter.convert(source.getInstructors().get(i)));
-            }
-            ;
-        }
-
-        /*
-         * Convert each student to student dto
-         */
-        List<StudentDto> studentsDtos = new ArrayList<>();
-        if(!source.getInstructors().isEmpty()) {
-            for(int i = 0; i < source.getNumberOfStudents(); i++) {
-                studentsDtos.add(studentToStudentDtoConverter.convert(source.getStudents().get(i)));
-            }
-        }
-
         TeamDto teamDto = new TeamDto(
                 source.getTeamName(),
                 source.getAcademicYear(),
-                instructorDtos,
-                studentsDtos,
+                source.getInstructors() != null ? source.getInstructors().stream()
+                        .map(instructor -> instructorToInstructorDtoConverter.convert(instructor)).collect(Collectors.toList()) : null,
+                source.getStudents() != null ? source.getStudents().stream()
+                        .map(student -> studentToStudentDtoConverter.convert(student)).collect(Collectors.toList()) : null,
                 source.getSection() != null
                         ? source.getSection().getSectionName()
                         : null);
