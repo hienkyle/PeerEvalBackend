@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -109,12 +108,10 @@ public class InstructorController {
      *
      * Note: NOT TESTED
      */
-    @PutMapping("/activate/{instructorId}")
+    @PutMapping("/reactivate/{instructorId}")
     public Result reactivateInstructor(@PathVariable String instructorId){
         Instructor reactivatedInstructor = this.instructorService.reactivate(instructorId);
         InstructorDto instructorDto = this.instructorToInstructorDtoConverter.convert(reactivatedInstructor);
         return new Result(true, StatusCode.SUCCESS, "Reactivate Success", instructorDto);
     }
-
-
 }

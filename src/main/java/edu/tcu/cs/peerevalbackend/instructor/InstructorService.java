@@ -30,7 +30,7 @@ public class InstructorService {
      *
      * @return List<String>
      *
-     * Note: NOT TESTED
+     * Note: TESTED - SUCCESS
      */
     public List<String> invite(List<String> emails) {
         return emails;

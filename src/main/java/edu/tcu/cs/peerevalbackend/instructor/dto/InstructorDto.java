@@ -11,7 +11,7 @@ import java.util.List;
  * @param instructorId - the id of the instructor
  * @param message - the name of the instructor
  * @param status - active or deactivated
- * @param teamDtos - a list of team names supervised by this instructor
+ * @param teamNames - a list of team names supervised by this instructor
  */
 public record InstructorDto(String instructorId,
                             @NotEmpty(message = "name is required.")

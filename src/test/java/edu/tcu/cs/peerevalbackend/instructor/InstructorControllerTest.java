@@ -1,14 +1,17 @@
 package edu.tcu.cs.peerevalbackend.instructor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tcu.cs.peerevalbackend.instructor.dto.InstructorDto;
 import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
+import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -81,11 +85,11 @@ class InstructorControllerTest {
     }
 
     @Test
-    void findInstructorsByCriteria() {
+    void testFindInstructorsByCriteria() {
     }
 
     @Test
-    void testViewInstructorSuccess() throws Exception {
+    void testFindInstructorByIdSuccess() throws Exception {
         // Given
         given(this.instructorService.findById("1")).willReturn(this.instructors.get(0));
 
@@ -100,10 +104,104 @@ class InstructorControllerTest {
     }
 
     @Test
-    void deactivateInstructor() {
+    void testDeactivateInstructorSuccess() throws Exception {
+        // Given
+        InstructorDto instructorDto = new InstructorDto("1",
+                "alive",
+                ActiveStatus.IS_DEACTIVATED,
+                null);
+        String json = objectMapper.writeValueAsString(instructorDto);
+
+        Instructor deactivatedInstructor = new Instructor();
+        deactivatedInstructor.setInstructorId("1");
+        deactivatedInstructor.setName("alvie");
+        deactivatedInstructor.setStatus(ActiveStatus.IS_DEACTIVATED);
+        deactivatedInstructor.setDeactivateReason("dropped");
+
+        given(this.instructorService.deactivate(eq("1"), Mockito.anyString())).willReturn(deactivatedInstructor);
+
+        // When and Then
+        this.mockMvc.perform(MockMvcRequestBuilders.put(this.baseUrl + "/instructors/deactivate/1").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Deactivate Success"))
+                .andExpect(jsonPath("$.data.instructorId").value("1"))
+                .andExpect(jsonPath("$.data.name").value("alvie"))
+                .andExpect(jsonPath("$.data.status").value("IS_DEACTIVATED"));
     }
 
     @Test
-    void reactivateInstructor() {
+    void testDeactivateInstructorNotFound() throws Exception {
+        // Given
+        InstructorDto instructorDto = new InstructorDto("10",
+                "hien",
+                ActiveStatus.IS_DEACTIVATED,
+                null);
+        String json = objectMapper.writeValueAsString(instructorDto);
+
+        Instructor deactivatedInstructor = new Instructor();
+        deactivatedInstructor.setInstructorId("10");
+        deactivatedInstructor.setName("hien");
+        deactivatedInstructor.setStatus(ActiveStatus.IS_DEACTIVATED);
+        deactivatedInstructor.setDeactivateReason("dropped");
+
+        given(this.instructorService.deactivate(eq("10"), Mockito.anyString())).willThrow(new ObjectNotFoundException("instructor", "10"));
+
+        // When and Then
+        this.mockMvc.perform(MockMvcRequestBuilders.put(this.baseUrl + "/instructors/deactivate/10").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find instructor with Id 10 :("))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testReactivateInstructorSuccess() throws Exception {
+        // Given
+        InstructorDto instructorDto = new InstructorDto("1",
+                "alive",
+                ActiveStatus.IS_ACTIVE,
+                null);
+        String json = objectMapper.writeValueAsString(instructorDto);
+
+        Instructor reactivatedInstructor = new Instructor();
+        reactivatedInstructor.setInstructorId("1");
+        reactivatedInstructor.setName("alvie");
+        reactivatedInstructor.setStatus(ActiveStatus.IS_ACTIVE);
+
+        given(this.instructorService.reactivate(eq("1"))).willReturn(reactivatedInstructor);
+
+        // When and Then
+        this.mockMvc.perform(MockMvcRequestBuilders.put(this.baseUrl + "/instructors/reactivate/1").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Reactivate Success"))
+                .andExpect(jsonPath("$.data.instructorId").value("1"))
+                .andExpect(jsonPath("$.data.name").value("alvie"))
+                .andExpect(jsonPath("$.data.status").value("IS_ACTIVE"));
+    }
+
+    @Test
+    void testReactivateInstructorNotFound() throws Exception {
+        // Given
+        InstructorDto instructorDto = new InstructorDto("10",
+                "hien",
+                ActiveStatus.IS_ACTIVE,
+                null);
+        String json = objectMapper.writeValueAsString(instructorDto);
+
+        Instructor deactivatedInstructor = new Instructor();
+        deactivatedInstructor.setInstructorId("10");
+        deactivatedInstructor.setName("hien");
+        deactivatedInstructor.setStatus(ActiveStatus.IS_ACTIVE);
+
+        given(this.instructorService.reactivate(eq("10"))).willThrow(new ObjectNotFoundException("instructor", "10"));
+
+        // When and Then
+        this.mockMvc.perform(MockMvcRequestBuilders.put(this.baseUrl + "/instructors/reactivate/10").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find instructor with Id 10 :("))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 }
