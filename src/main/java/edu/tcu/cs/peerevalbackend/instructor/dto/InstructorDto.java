@@ -16,8 +16,10 @@ import java.util.List;
 public record InstructorDto(String instructorId,
                             @NotEmpty(message = "name is required.")
                             String name,
+                            @NotEmpty(message = "academic year is required.")
+                            Integer academicYear,
+                            List<String> teamNames,
                             @NotEmpty(message = "status is required.")
-                            ActiveStatus status,
-                            List<String> teamNames
+                            ActiveStatus status
                             ){
 }
