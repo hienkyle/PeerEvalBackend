@@ -53,6 +53,7 @@ class InstructorControllerTest {
         i1.setName("alvie");
         i1.setPassword("123456");
         i1.setSections(null);
+        i1.setAcademicYear(2024);
         i1.setStatus(ActiveStatus.IS_ACTIVE);
         i1.setDeactivateReason(null);
         i1.setTeams(null);
@@ -62,6 +63,7 @@ class InstructorControllerTest {
         i2.setName("ana");
         i2.setPassword("123456");
         i2.setSections(null);
+        i1.setAcademicYear(2024);
         i2.setStatus(ActiveStatus.IS_ACTIVE);
         i2.setDeactivateReason(null);
         i2.setTeams(null);
@@ -71,6 +73,7 @@ class InstructorControllerTest {
         i3.setName("maribel");
         i3.setPassword("123456");
         i3.setSections(null);
+        i1.setAcademicYear(2024);
         i3.setStatus(ActiveStatus.IS_DEACTIVATED);
         i3.setDeactivateReason(null);
         i3.setTeams(null);
@@ -100,7 +103,8 @@ class InstructorControllerTest {
                 .andExpect(jsonPath("$.message").value("Find One Success"))
                 .andExpect(jsonPath("$.data.instructorId").value("1"))
                 .andExpect(jsonPath("$.data.name").value("alvie"))
-                .andExpect(jsonPath("$.data.status").value("IS_ACTIVE"));
+                .andExpect(jsonPath("$.data.status").value("IS_ACTIVE"))
+                .andExpect(jsonPath("$.data.academicYear").value(2024));
     }
 
     @Test
@@ -108,13 +112,15 @@ class InstructorControllerTest {
         // Given
         InstructorDto instructorDto = new InstructorDto("1",
                 "alive",
-                ActiveStatus.IS_DEACTIVATED,
-                null);
+                2024,
+                null,
+                ActiveStatus.IS_DEACTIVATED);
         String json = objectMapper.writeValueAsString(instructorDto);
 
         Instructor deactivatedInstructor = new Instructor();
         deactivatedInstructor.setInstructorId("1");
         deactivatedInstructor.setName("alvie");
+        deactivatedInstructor.setAcademicYear(2024);
         deactivatedInstructor.setStatus(ActiveStatus.IS_DEACTIVATED);
         deactivatedInstructor.setDeactivateReason("dropped");
 
@@ -127,7 +133,8 @@ class InstructorControllerTest {
                 .andExpect(jsonPath("$.message").value("Deactivate Success"))
                 .andExpect(jsonPath("$.data.instructorId").value("1"))
                 .andExpect(jsonPath("$.data.name").value("alvie"))
-                .andExpect(jsonPath("$.data.status").value("IS_DEACTIVATED"));
+                .andExpect(jsonPath("$.data.status").value("IS_DEACTIVATED"))
+                .andExpect(jsonPath("$.data.academicYear").value(2024));
     }
 
     @Test
@@ -135,8 +142,9 @@ class InstructorControllerTest {
         // Given
         InstructorDto instructorDto = new InstructorDto("10",
                 "hien",
-                ActiveStatus.IS_DEACTIVATED,
-                null);
+                2024,
+                null,
+                ActiveStatus.IS_DEACTIVATED);
         String json = objectMapper.writeValueAsString(instructorDto);
 
         Instructor deactivatedInstructor = new Instructor();
@@ -160,13 +168,15 @@ class InstructorControllerTest {
         // Given
         InstructorDto instructorDto = new InstructorDto("1",
                 "alive",
-                ActiveStatus.IS_ACTIVE,
-                null);
+                2024,
+                null,
+                ActiveStatus.IS_ACTIVE);
         String json = objectMapper.writeValueAsString(instructorDto);
 
         Instructor reactivatedInstructor = new Instructor();
         reactivatedInstructor.setInstructorId("1");
         reactivatedInstructor.setName("alvie");
+        reactivatedInstructor.setAcademicYear(2024);
         reactivatedInstructor.setStatus(ActiveStatus.IS_ACTIVE);
 
         given(this.instructorService.reactivate(eq("1"))).willReturn(reactivatedInstructor);
@@ -178,7 +188,8 @@ class InstructorControllerTest {
                 .andExpect(jsonPath("$.message").value("Reactivate Success"))
                 .andExpect(jsonPath("$.data.instructorId").value("1"))
                 .andExpect(jsonPath("$.data.name").value("alvie"))
-                .andExpect(jsonPath("$.data.status").value("IS_ACTIVE"));
+                .andExpect(jsonPath("$.data.status").value("IS_ACTIVE"))
+                .andExpect(jsonPath("$.data.academicYear").value(2024));
     }
 
     @Test
@@ -186,8 +197,9 @@ class InstructorControllerTest {
         // Given
         InstructorDto instructorDto = new InstructorDto("10",
                 "hien",
-                ActiveStatus.IS_ACTIVE,
-                null);
+                2024,
+                null,
+                ActiveStatus.IS_ACTIVE);
         String json = objectMapper.writeValueAsString(instructorDto);
 
         Instructor deactivatedInstructor = new Instructor();

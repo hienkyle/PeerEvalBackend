@@ -20,7 +20,7 @@ public class Instructor implements Serializable {
 
     private String name;
 
-    private String academicYear;
+    private Integer academicYear;
 
     private ActiveStatus status;
 
@@ -55,11 +55,11 @@ public class Instructor implements Serializable {
         this.name = name;
     }
 
-    public String getAcademicYear() {
+    public Integer getAcademicYear() {
         return academicYear;
     }
 
-    public void setAcademicYear(String academicYear) {
+    public void setAcademicYear(Integer academicYear) {
         this.academicYear = academicYear;
     }
 

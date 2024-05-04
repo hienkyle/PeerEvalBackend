@@ -20,9 +20,10 @@ public class InstructorToInstructorDtoConverter implements Converter<Instructor,
         InstructorDto instructorDto = new InstructorDto(
                 source.getInstructorId(),
                 source.getName(),
-                source.getStatus(),
+                source.getAcademicYear(),
                 source.getTeams() != null ? source.getTeams().stream()
-                        .map(team -> team.getTeamName()).collect(Collectors.toList()) : null
+                        .map(team -> team.getTeamName()).collect(Collectors.toList()) : null,
+                source.getStatus()
         );
         return instructorDto;
     }

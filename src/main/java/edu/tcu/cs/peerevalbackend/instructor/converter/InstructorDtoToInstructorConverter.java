@@ -15,6 +15,7 @@ public class InstructorDtoToInstructorConverter implements Converter<InstructorD
         Instructor instructor = new Instructor();
         instructor.setInstructorId(source.instructorId());
         instructor.setName(source.name());
+        instructor.setAcademicYear(source.academicYear());
         instructor.setStatus(source.status());
         return instructor;
     }
