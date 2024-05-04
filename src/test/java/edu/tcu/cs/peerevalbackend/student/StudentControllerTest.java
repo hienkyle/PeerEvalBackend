@@ -85,7 +85,7 @@ public class StudentControllerTest {
         given(this.studentService.findAll()).willReturn(this.students);
 
         // When and then
-        this.mockMvc.perform(get("/peerEval/student").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/peerEval/student/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Found all students"))
@@ -136,7 +136,7 @@ public class StudentControllerTest {
         given(this.studentService.addStudent(Mockito.any(Student.class))).willReturn(savedStudent);
 
         // When and then
-        this.mockMvc.perform(post("/peerEval/student").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(post("/peerEval/student/").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Successfully saved student"))
