@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url}/instructors")
+@CrossOrigin(origins = "*")
 public class InstructorController {
     private final InstructorService instructorService;
 
@@ -88,7 +89,7 @@ public class InstructorController {
      *
      * @return Result
      *
-     * Note: NOT TESTED
+     * Note: TESTED
      */
     @PutMapping("/deactivate/{instructorId}")
     public Result deactivateInstructor(@PathVariable String instructorId, @Valid @RequestBody String reason){
@@ -106,7 +107,7 @@ public class InstructorController {
      *
      * @return Result
      *
-     * Note: NOT TESTED
+     * Note: TESTED
      */
     @PutMapping("/reactivate/{instructorId}")
     public Result reactivateInstructor(@PathVariable String instructorId){
