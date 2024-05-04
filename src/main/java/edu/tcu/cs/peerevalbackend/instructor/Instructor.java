@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Entity
 public class Instructor implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.UUID)
     private String instructorId;
 
     private String name;
