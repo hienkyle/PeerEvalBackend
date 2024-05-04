@@ -15,7 +15,7 @@ import java.util.Map;
 @Service
 @Transactional
 public class InstructorService {
-    InstructorRepository instructorRepository;
+    private final InstructorRepository instructorRepository;
 
     public InstructorService(InstructorRepository instructorRepository) {
         this.instructorRepository = instructorRepository;
@@ -60,7 +60,11 @@ public class InstructorService {
         }
 
         if(StringUtils.hasLength(searchCriteria.get("status"))){
-            spec = spec.and(InstructorSpecs.hasStatus(searchCriteria.get("status")));
+            if(searchCriteria.get("status").equals("IS_ACTIVE")){
+                spec = spec.and(InstructorSpecs.hasStatus(ActiveStatus.IS_ACTIVE));
+            }else if(searchCriteria.get("status").equals("IS_DEACTIVATED")){
+                spec = spec.and(InstructorSpecs.hasStatus(ActiveStatus.IS_DEACTIVATED));
+            }
         }
 
         return this.instructorRepository.findAll(spec, pageable);

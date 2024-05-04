@@ -14,7 +14,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("${api.endpoint.base-url}/instructors")
-@CrossOrigin(origins = "*")
 public class InstructorController {
     private final InstructorService instructorService;
 
