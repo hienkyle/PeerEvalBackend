@@ -19,9 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -85,7 +83,7 @@ public class StudentControllerTest {
         given(this.studentService.findAll()).willReturn(this.students);
 
         // When and then
-        this.mockMvc.perform(get("/peereval/student").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/peereval/student/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Found all students"))
@@ -136,7 +134,7 @@ public class StudentControllerTest {
         given(this.studentService.addStudent(Mockito.any(Student.class))).willReturn(savedStudent);
 
         // When and then
-        this.mockMvc.perform(post("/peereval/student").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(post("/peereval/student/").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Successfully saved student"))
