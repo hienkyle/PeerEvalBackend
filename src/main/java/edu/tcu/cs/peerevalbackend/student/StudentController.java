@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/peerEval/student")
+@CrossOrigin(origins = "*")
 public class StudentController {
 
     private final StudentService studentService;

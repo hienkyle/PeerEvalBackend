@@ -4,6 +4,8 @@ import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.instructor.InstructorRepository;
 import edu.tcu.cs.peerevalbackend.section.Section;
 import edu.tcu.cs.peerevalbackend.section.SectionRepository;
+import edu.tcu.cs.peerevalbackend.student.Student;
+import edu.tcu.cs.peerevalbackend.student.StudentRepository;
 import edu.tcu.cs.peerevalbackend.team.Team;
 import edu.tcu.cs.peerevalbackend.team.TeamRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -20,10 +22,13 @@ public class DBDDataInitializer implements CommandLineRunner {
 
     private InstructorRepository instructorRepository;
 
-    public DBDDataInitializer(TeamRepository teamRepository, SectionRepository sectionRepository, InstructorRepository instructorRepository) {
+    private StudentRepository studentRepository;
+
+    public DBDDataInitializer(TeamRepository teamRepository, SectionRepository sectionRepository, InstructorRepository instructorRepository, StudentRepository studentRepository) {
         this.teamRepository = teamRepository;
         this.sectionRepository = sectionRepository;
         this.instructorRepository = instructorRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Override
@@ -45,5 +50,13 @@ public class DBDDataInitializer implements CommandLineRunner {
 
         instructorRepository.save(instructor1);
         instructorRepository.save(instructor2);
+
+        Student student1 = new Student();
+        student1.setStudentId(1);
+        student1.setFirstName("maribel");
+        student1.setLastName("vargas");
+        student1.setPassword("123456");
+
+        studentRepository.save(student1);
     }
 }
