@@ -51,5 +51,13 @@ public class DBDDataInitializer implements CommandLineRunner {
         instructorRepository.save(instructor1);
         instructorRepository.save(instructor2);
 
+        //Added a team
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2024");
+        team1.setInstructors(null);
+        team1.setStudents(null);
+        team1.setSection(null);
+        teamRepository.save(team1);
     }
 }
