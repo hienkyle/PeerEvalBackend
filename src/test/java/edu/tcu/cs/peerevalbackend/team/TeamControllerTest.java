@@ -86,11 +86,11 @@ public class TeamControllerTest {
 
         Student stu3 = new Student();
         stu3.setStudentId(3);
-        stu1.setFirstName("Asher");
-        stu1.setMiddleInitial("D");
-        stu1.setLastName("OConnor");
-        stu1.setAcademicYear("2024");
-        stu1.setPassword("1518123");
+        stu3.setFirstName("Asher");
+        stu3.setMiddleInitial("D");
+        stu3.setLastName("OConnor");
+        stu3.setAcademicYear("2024");
+        stu3.setPassword("1518123");
         this.students.add(stu3);
 
         //Instructor set up
