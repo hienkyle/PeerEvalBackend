@@ -3,12 +3,10 @@ package edu.tcu.cs.peerevalbackend.section;
 import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.team.Team;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,7 +21,7 @@ public class Section implements Serializable {
 
     //collection/list of teams it 'owns'; mapped by value has to be the same as the many side value name
     //the one side, Section, gives up responsibility of maintaining the foreign key (many side (Team) will store the FK), ORM will be used so that references become FK
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "sectionName")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "section")
     private List<Team> teams;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "instructorId")
@@ -36,8 +34,10 @@ public class Section implements Serializable {
     //private Rubric rubricName;
 
     //CHECK THIS!!
-    //@OneToMany ??
-    //private List<Date> activeWeeks;
+    @ElementCollection
+    @CollectionTable(name = "section_active_weeks", joinColumns = @JoinColumn(name = "section_name"))
+    @Column(name = "active_week")
+    private List<Date> activeWeeks;
 
     public Section() {
     }
@@ -98,9 +98,15 @@ public class Section implements Serializable {
     //    this.rubricName = rubricName;
     //}
 
-    //public List<Date> getActiveWeeks() {
-    //    return activeWeeks;
-    //}
+    public List<Date> getActiveWeeks() {
+        return activeWeeks;
+    }
+
+
+    public void setActiveWeeks(List<Date> activeWeeks) {
+        this.activeWeeks = activeWeeks;
+    }
+
 
     //public void setActiveWeeks(List<Date> activeWeeks) {
     //    this.activeWeeks = activeWeeks;

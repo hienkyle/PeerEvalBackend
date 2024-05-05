@@ -9,6 +9,9 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/peerEval/teams")
@@ -27,15 +30,12 @@ public class TeamController {
      * At the moment just a filler method
      */
     @GetMapping
-    public Result findAllTeams() {
-        List<Team> foundTeams = this.teamService.findAll();
+    public Result findAllTeams(Pageable pageable) {
+        Page<Team> teamPage = this.teamService.findAll(pageable);
 
-        //Converter foundTeams to list of teamDtos
-        List<TeamDto> teamDtos = foundTeams.stream()
-                .map(this.teamToTeamDtoConverter::convert)
-                .collect(Collectors.toList());
-
-        return new Result(true, StatusCode.SUCCESS, "Find All Success", teamDtos);
+        //Convert teamPage to a page of teamDtos
+        Page<TeamDto> teamDtosPage = teamPage.map(this.teamToTeamDtoConverter::convert);
+        return new Result(true, StatusCode.SUCCESS, "Find All Success", teamDtosPage);
     }
 
     /*
@@ -87,7 +87,7 @@ public class TeamController {
      * Order of parameters matters
      * Whatever is in {} will be assigned to parameters, which is why order matters
      */
-    @PutMapping("/{teamName}/students/{studentId}")
+    @PutMapping("/{teamName}/assign/students/{studentId}")
     public Result assignStudent(@PathVariable String teamName, @PathVariable Integer studentId) {
         this.teamService.assignStudent(teamName, studentId);
         return new Result(true, StatusCode.SUCCESS, "Student Assignment Success");
@@ -97,7 +97,7 @@ public class TeamController {
      * Use case 14
      * Make sure the annotation is correct
      */
-    @PutMapping("/{teamName}/students/{studentId}")
+    @PutMapping("/{teamName}/remove/students/{studentId}")
     public Result removeStudent(@PathVariable String teamName, @PathVariable Integer studentId) {
         this.teamService.removeStudent(teamName, studentId);
         return new Result(true, StatusCode.SUCCESS, "Remove Student Success");
@@ -109,7 +109,7 @@ public class TeamController {
      * Order of parameters matters
      * Whatever is in {} will be assigned to parameters, which is why order matters
      */
-    @PutMapping("/{teamName}/instructors/{instructorId}")
+    @PutMapping("/{teamName}/assign/instructors/{instructorId}")
     public Result assignInstructor(@PathVariable String teamName, @PathVariable String instructorId) {
         this.teamService.assignInstructor(teamName, instructorId);
         return new Result(true, StatusCode.SUCCESS, "Instructor Assignment Success");
@@ -119,18 +119,22 @@ public class TeamController {
      * Use case 20
      * Make sure the annotation is correct
      */
-    @PutMapping("/{teamName}/instructors/{instructorId}")
+    @PutMapping("/{teamName}/remove/instructors/{instructorId}")
     public Result removeInstructor(@PathVariable String teamName, @PathVariable String instructorId) {
         this.teamService.removeInstructor(teamName, instructorId);
         return new Result(true, StatusCode.SUCCESS, "Remove Instructor Success");
     }
 
-    /*@PostMapping("/search")
-    public Result findArtifactsByCriteria(@RequestBody Map<String, String> searchCriteria, Pageable pageable) {
-        Page<Team> artifactPage = this.teamService.findByCriteria(searchCriteria, pageable);
+    /*
+    * Use case 7
+    * Search by criteria
+    */
+    @PostMapping("/search")
+    public Result findTeamsByCriteria(@RequestBody Map<String, String> searchCriteria, Pageable pageable) {
+        Page<Team> teamPage = this.teamService.findByCriteria(searchCriteria, pageable);
 
-        //make a team dto class
-        Page<TeamDto> artifactDtoPage = artifactPage.map(this.teamToTeamDtoConverter::convert);
-        return new Result(true, StatusCode.SUCCESS, "Search Success", teamDtoPage);
-    }*/
+        //Make a team dto class
+        Page<TeamDto> teamDtosPage = teamPage.map(this.teamToTeamDtoConverter::convert);
+        return new Result(true, StatusCode.SUCCESS, "Search Success", teamDtosPage);
+    }
 }

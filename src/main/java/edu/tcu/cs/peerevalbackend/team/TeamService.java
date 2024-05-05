@@ -7,6 +7,10 @@ import edu.tcu.cs.peerevalbackend.student.StudentRepository;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.*;
 
@@ -159,9 +163,16 @@ public class TeamService {
     }
 
     /*
+    * Honestly, idk what this is for
+    */
+    public Page<Team> findAll(Pageable pageable) {
+        return this.teamRepository.findAll(pageable);
+    }
+
+    /*
     * Use case 7
     */
-    /*public Page<Team> findByCriteria(Map<String, String> searchCriteria, Pageable pageable) {
+    public Page<Team> findByCriteria(Map<String, String> searchCriteria, Pageable pageable) {
         Specification<Team> spec = Specification.where(null);
 
         if (StringUtils.hasLength(searchCriteria.get("teamName"))) {
@@ -180,10 +191,6 @@ public class TeamService {
             spec = spec.and(TeamSpecs.hasInstructor(searchCriteria.get("instructor")));
         }
 
-        if(spec ==) {
-
-        }
-
         return this.teamRepository.findAll(spec, pageable);
-    }*/
+    }
 }

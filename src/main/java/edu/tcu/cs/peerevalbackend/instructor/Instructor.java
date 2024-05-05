@@ -3,9 +3,7 @@ package edu.tcu.cs.peerevalbackend.instructor;
 import edu.tcu.cs.peerevalbackend.section.Section;
 import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.team.Team;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,11 +15,12 @@ import java.util.stream.Collectors;
 @Entity
 public class Instructor implements Serializable {
     @Id
+//    @GeneratedValue(strategy = GenerationType.UUID)
     private String instructorId;
 
     private String name;
 
-    private String academicYear;
+    private Integer academicYear;
 
     private ActiveStatus status;
 
@@ -56,11 +55,11 @@ public class Instructor implements Serializable {
         this.name = name;
     }
 
-    public String getAcademicYear() {
+    public Integer getAcademicYear() {
         return academicYear;
     }
 
-    public void setAcademicYear(String academicYear) {
+    public void setAcademicYear(Integer academicYear) {
         this.academicYear = academicYear;
     }
 

@@ -17,10 +17,10 @@ public class Team implements Serializable {
     * **** Confirmed with Maribel ****
     * Has an error because Section is not annotated with the type of relationship
     * Ensure there is a field List<Team> teams in Section
-    * Ensure field in Section class is annotated w/ @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "sectionName")
+    * Ensure field in Section class is annotated w/ @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "section")
     */
     @ManyToOne
-    private Section sectionName;
+    private Section section;
 
     /*
     * Has an error because Instructor is not annotated with the type of relationship
@@ -42,19 +42,24 @@ public class Team implements Serializable {
     * This should eventually work, ensure Student class has something along the lines of Team teamName as one of its fields
     * The new annotation should be: @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "teamName")
     */
-    @OneToMany(mappedBy = "teamName")
+    @OneToMany(mappedBy = "team")
     private List<Student> students;
 
     String academicYear;
 
-    //Dr. Wei has an empty constructor
+    //Dr. Wei has an empty constructor, but I don't, it appears that I needed to initialize some of my variables
     public Team() {
+        teamName = "";
+        section = new Section();
+        instructors = new ArrayList<>();
+        students = new ArrayList<>();
+        academicYear = "";
     }
 
     //Dr. Wei does not have an overloaded constructor, I included it just in case
-    public Team(String teamName, Section sectionName, List<Instructor> instructors, List<Student> students, String academicYear) {
+    public Team(String teamName, Section section, List<Instructor> instructors, List<Student> students, String academicYear) {
         this.teamName = teamName;
-        this.sectionName = sectionName;
+        this.section = section;
         this.instructors = instructors;
         this.students = students;
         this.academicYear = academicYear;
@@ -70,12 +75,12 @@ public class Team implements Serializable {
         this.teamName = teamName;
     }
 
-    public Section getSectionName() {
-        return sectionName;
+    public Section getSection() {
+        return section;
     }
 
-    public void setSectionName(Section sectionName) {
-        this.sectionName = sectionName;
+    public void setSection(Section section) {
+        this.section = section;
     }
 
     public List<Instructor> getInstructors() {

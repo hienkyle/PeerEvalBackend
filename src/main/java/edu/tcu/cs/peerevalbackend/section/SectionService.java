@@ -2,7 +2,16 @@ package edu.tcu.cs.peerevalbackend.section;
 
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional //will make transaction processing easier later on
@@ -13,6 +22,11 @@ public class SectionService {
     public SectionService(SectionRepository sectionRepository) { //injection
         this.sectionRepository = sectionRepository;
     }
+
+    public List<Section> findAll() {
+        return sectionRepository.findAll();
+    }
+
     public Section findById(String sectionName) {
         return this.sectionRepository.findById(sectionName)
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
@@ -41,6 +55,41 @@ public class SectionService {
         this.sectionRepository.findById(sectionName)
                 .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
         this.sectionRepository.deleteById(sectionName);
+    }
+    // setup active weeks
+    public void setupActiveWeeks(String sectionName, List<Date> activeWeeks) {
+        Optional<Section> optionalSection = sectionRepository.findById(sectionName);
+        if (optionalSection.isPresent()) {
+            Section section = optionalSection.get();
+            section.setActiveWeeks(activeWeeks);
+            sectionRepository.save(section);
+        }
+    }
+    public List<Date> getActiveWeeks(String sectionName) {
+        Section section = sectionRepository.findById(sectionName)
+                .orElseThrow(() -> new ObjectNotFoundException("section", sectionName));
+
+        return section.getActiveWeeks();
+    }
+
+    public Page<Section> findAll(Pageable pageable) {
+        return this.sectionRepository.findAll(pageable);
+    }
+
+    public Page<Section> findByCriteria(Map<String, String> searchCriteria, Pageable pageable) {
+        //base spec to start with
+        Specification<Section> spec = Specification.where(null);
+
+        if(StringUtils.hasLength(searchCriteria.get("sectionName"))){
+            spec = spec.and(SectionSpecs.hasId(searchCriteria.get("sectionName")));
+        }
+
+        if(StringUtils.hasLength(searchCriteria.get("academicYear"))){
+            spec = spec.and(SectionSpecs.containsAcademicYear(searchCriteria.get("academicYear")));
+        }
+
+        return this.sectionRepository.findAll(spec, pageable);
+
     }
 
 }

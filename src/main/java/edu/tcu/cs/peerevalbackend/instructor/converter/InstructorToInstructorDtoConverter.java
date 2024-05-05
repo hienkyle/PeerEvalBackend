@@ -10,10 +10,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class InstructorToInstructorDtoConverter implements Converter<Instructor, InstructorDto> {
-    private final TeamToTeamDtoConverter teamToTeamDtoConverter;
 
-    public InstructorToInstructorDtoConverter(TeamToTeamDtoConverter teamToTeamDtoConverter) {
-        this.teamToTeamDtoConverter = teamToTeamDtoConverter;
+    public InstructorToInstructorDtoConverter() {
+
     }
 
     @Override
@@ -21,9 +20,10 @@ public class InstructorToInstructorDtoConverter implements Converter<Instructor,
         InstructorDto instructorDto = new InstructorDto(
                 source.getInstructorId(),
                 source.getName(),
-                source.getStatus(),
+                source.getAcademicYear(),
                 source.getTeams() != null ? source.getTeams().stream()
-                        .map(team -> teamToTeamDtoConverter.convert(team)).collect(Collectors.toList()) : null
+                        .map(team -> team.getTeamName()).collect(Collectors.toList()) : null,
+                source.getStatus()
         );
         return instructorDto;
     }

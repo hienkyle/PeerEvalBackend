@@ -7,16 +7,25 @@ import edu.tcu.cs.peerevalbackend.section.dto.SectionDto;
 import edu.tcu.cs.peerevalbackend.student.Student;
 import edu.tcu.cs.peerevalbackend.student.dto.StudentDto;
 import jakarta.validation.constraints.NotEmpty;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 /*
 * Attributes/properties that can be seen to client
 */
+
+//Make changes
 public record TeamDto(@NotEmpty(message = "Team name is required.")
                       String teamName,
 
+                      @NotEmpty(message = "Academic year is required.")
                       String academicYear,
+
+                      /*
+                      * Change all of these below
+                      */
 
                       //Change to InstructorDto
                       List<InstructorDto> instructorDtos,
@@ -25,6 +34,6 @@ public record TeamDto(@NotEmpty(message = "Team name is required.")
                       List<StudentDto> studentDtos,
 
                       //Change to SectionDto
-                      SectionDto sectionDto) {
+                      String sectionName) {
 }
 

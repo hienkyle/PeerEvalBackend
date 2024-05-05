@@ -32,6 +32,7 @@ public class RubricCriteriaController {
         return new Result(true, StatusCode.SUCCESS, "Find One Success", rubricCriteriaDto);
     }
 
+    @PostMapping()
     public Result addRubricCritera(@Valid @RequestBody RubricCriteriaDto rubricCriteriaDto) {
         RubricCriteria newRubricCriteria = this.rubricCriteriaDtoToRubricCriteriaConverter.convert(rubricCriteriaDto);
         RubricCriteria savedRubricCriteria = this.rubricCriteriaService.save(newRubricCriteria);

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class RubricToRubricDtoConverter implements Converter<Rubric, RubricDto> {
     private final RubricCriteriaToRubricCriteriaDtoConverter rubricCriteriaToRubricCriteriaDtoConverter;
 
-    public RubricToRubricDtoConverter(RubricToRubricDtoConverter rubricToRubricDtoConverter, RubricCriteriaToRubricCriteriaDtoConverter rubricCriteriaToRubricCriteriaDtoConverter) {
+    public RubricToRubricDtoConverter(RubricCriteriaToRubricCriteriaDtoConverter rubricCriteriaToRubricCriteriaDtoConverter) {
         this.rubricCriteriaToRubricCriteriaDtoConverter = rubricCriteriaToRubricCriteriaDtoConverter;
     }
 

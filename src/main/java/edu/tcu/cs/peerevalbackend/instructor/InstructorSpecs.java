@@ -1,5 +1,6 @@
 package edu.tcu.cs.peerevalbackend.instructor;
 
+import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class InstructorSpecs {
@@ -18,7 +19,7 @@ public class InstructorSpecs {
 //                criteriaBuilder.like(criteriaBuilder.lower(root.get("teams").get("teams")), "%" + providedTeamName + "%");
 //    }
 
-    public static Specification<Instructor> hasStatus(String providedStatus){
+    public static Specification<Instructor> hasStatus(ActiveStatus providedStatus){
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("status"), providedStatus);
     }

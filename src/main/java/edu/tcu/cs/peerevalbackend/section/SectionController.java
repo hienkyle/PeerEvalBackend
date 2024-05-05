@@ -6,7 +6,15 @@ import edu.tcu.cs.peerevalbackend.section.dto.SectionDto;
 import edu.tcu.cs.peerevalbackend.system.Result;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/peerEval/section")
@@ -21,6 +29,15 @@ public class SectionController {
         this.sectionService = sectionService;
         this.sectionToSectionDtoConverter = sectionToSectionDtoConverter;
         this.sectionDtoToSectionConverter = sectionDtoToSectionConverter;
+    }
+
+    @GetMapping()
+    public Result findAllSections(Pageable pageable) {
+        Page<Section> sectionPage = this.sectionService.findAll(pageable);
+        //convert sectionPage to a page of sectionDtos
+        Page<SectionDto> sectionDtosPage = sectionPage
+                .map(this.sectionToSectionDtoConverter::convert);
+        return new Result(true, StatusCode.SUCCESS, "Find All Success", sectionDtosPage);
     }
 
     @GetMapping("/{sectionName}")
@@ -53,4 +70,24 @@ public class SectionController {
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
     }
 
+    @PostMapping("/{sectionName}/active-weeks")
+    public Result setActiveWeeks(@PathVariable String sectionName, @RequestBody List<Date> activeWeeks) {
+        sectionService.setupActiveWeeks(sectionName, activeWeeks);
+        return new Result(true, StatusCode.SUCCESS, "Active weeks set up successfully for section: " + sectionName);
+    }
+
+    @GetMapping("/{sectionName}/active-weeks")
+    public Result getActiveWeeks(@PathVariable String sectionName) {
+        List<Date> activeWeeks = sectionService.getActiveWeeks(sectionName);
+        return new Result(true, StatusCode.SUCCESS, "Active weeks retrieved successfully for section: " + sectionName, activeWeeks);
+    }
+
+    @PostMapping("/search")
+    public Result findSectionsByCriteria(@RequestBody Map<String, String> searchCriteria, Pageable pageable) {
+        Page<Section> sectionPage =  this.sectionService.findByCriteria(searchCriteria, pageable);
+        Page<SectionDto> sectionDtoPage = sectionPage.map(this.sectionToSectionDtoConverter::convert);
+        return new Result(true, StatusCode.SUCCESS, "Search Success", sectionDtoPage);
+    }
 }
+
+

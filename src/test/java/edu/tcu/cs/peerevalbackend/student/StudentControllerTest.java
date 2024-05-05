@@ -83,7 +83,7 @@ public class StudentControllerTest {
         given(this.studentService.findAll()).willReturn(this.students);
 
         // When and then
-        this.mockMvc.perform(get("/peereval/student/").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/peerEval/student").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Found all students"))
@@ -100,7 +100,7 @@ public class StudentControllerTest {
         given(this.studentService.findById(1)).willReturn(this.students.getFirst());
 
         // When and then
-        this.mockMvc.perform(get("/peereval/student/1").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/peerEval/student/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Successfully found student"))
@@ -114,7 +114,7 @@ public class StudentControllerTest {
         given(this.studentService.findById(5)).willThrow(new ObjectNotFoundException("Student",5));
 
         // When and then
-        this.mockMvc.perform(get("/peereval/student/5").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/peerEval/student/5").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find Student with Id 5 :("))
@@ -134,7 +134,7 @@ public class StudentControllerTest {
         given(this.studentService.addStudent(Mockito.any(Student.class))).willReturn(savedStudent);
 
         // When and then
-        this.mockMvc.perform(post("/peereval/student/").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(post("/peerEval/student").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Successfully saved student"))
@@ -155,7 +155,7 @@ public class StudentControllerTest {
         given(this.studentService.updateStudent(eq(1), Mockito.any(Student.class))).willReturn(updatedStudent);
 
         // When and then
-        this.mockMvc.perform(put("/peereval/student/1").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(put("/peerEval/student/1").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Successfully updated student"))
@@ -172,7 +172,7 @@ public class StudentControllerTest {
         String json = this.objectMapper.writeValueAsString(studentDto);
 
         // When and then
-        this.mockMvc.perform(put("/peereval/student/5").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(put("/peerEval/student/5").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find Student with Id 5 :("))
@@ -184,7 +184,7 @@ public class StudentControllerTest {
         doNothing().when(this.studentService).deleteStudent(3);
 
         // When and then
-        this.mockMvc.perform(delete("/peereval/student/3").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(delete("/peerEval/student/3").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Successfully deleted student"))
@@ -196,7 +196,7 @@ public class StudentControllerTest {
         doThrow(new ObjectNotFoundException("Student",5)).when(this.studentService).deleteStudent(5);
 
         // When and then
-        this.mockMvc.perform(delete("/peereval/student/5").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(delete("/peerEval/student/5").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
                 .andExpect(jsonPath("$.message").value("Could not find Student with Id 5 :("))

@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.section.dto.SectionDto;
 import edu.tcu.cs.peerevalbackend.student.Student;
+import edu.tcu.cs.peerevalbackend.system.ActiveStatus;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import edu.tcu.cs.peerevalbackend.team.Team;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false) // Turn off Spring Security
 class SectionControllerTest {
 
     @Autowired
@@ -55,45 +63,55 @@ class SectionControllerTest {
     void setUp() {
         //section set up
         this.sections = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.instructors = new ArrayList<>();
 
         Section s1 = new Section();
         s1.setSectionName("Section 1");
         s1.setAcademicYear("2023-2024");
         s1.setFirstAndLastDate("8/21/23 and 5/01/24");
-
+        s1.setTeams(null);
+        s1.setInstructors(null);
+        s1.setStudents(null);
         this.sections.add(s1);
 
         Section s2 = new Section();
         s2.setSectionName("Section 2");
         s2.setAcademicYear("2023-2024");
         s2.setFirstAndLastDate("8/21/23 and 5/01/24");
+        s2.setTeams(null);
+        s2.setInstructors(null);
+        s2.setStudents(null);
         this.sections.add(s2);
 
         Section s3 = new Section();
         s3.setSectionName("Section 3");
         s3.setAcademicYear("2023-2024");
         s3.setFirstAndLastDate("8/21/23 and 5/01/24");
+        s3.setTeams(null);
+        s3.setInstructors(null);
+        s3.setStudents(null);
         this.sections.add(s3);
 
         //team set up
         Team team1 = new Team();
         team1.setTeamName("Team 1");
         team1.setAcademicYear("2023-2024");
-        team1.setSectionName(null);
+        team1.setSection(null);
         team1.setInstructors(null);
         this.teams.add(team1);
 
         Team team2 = new Team();
         team2.setTeamName("Team 2");
         team2.setAcademicYear("2023-2024");
-        team2.setSectionName(null);
+        team2.setSection(null);
         team2.setInstructors(null);
         this.teams.add(team2);
 
         Team team3 = new Team();
         team3.setTeamName("Team 3");
         team3.setAcademicYear("2023-2024");
-        team3.setSectionName(null);
+        team3.setSection(null);
         team3.setInstructors(null);
         this.teams.add(team3);
 
@@ -103,7 +121,7 @@ class SectionControllerTest {
         i1.setName("alvie");
         i1.setPassword("123456");
         i1.setSections(null);
-        //i1.setStatus("active");
+        i1.setStatus(ActiveStatus.IS_ACTIVE);
         i1.setDeactivateReason(null);
         i1.setTeams(null);
         instructors.add(i1);
@@ -113,7 +131,7 @@ class SectionControllerTest {
         i2.setName("ana");
         i2.setPassword("123456");
         i2.setSections(null);
-       // i2.setStatus("active");
+        i2.setStatus(ActiveStatus.IS_ACTIVE);
         i2.setDeactivateReason(null);
         i2.setTeams(null);
         instructors.add(i2);
@@ -123,7 +141,7 @@ class SectionControllerTest {
         i3.setName("maribel");
         i3.setPassword("123456");
         i3.setSections(null);
-       // i3.setStatus("active");
+        i3.setStatus(ActiveStatus.IS_DEACTIVATED);
         i3.setDeactivateReason(null);
         i3.setTeams(null);
         instructors.add(i3);
@@ -163,6 +181,39 @@ class SectionControllerTest {
     }
 
     @Test
+    void testFindAllSectionsSuccess() throws Exception {
+        //given
+        Sort sort = Sort.by(
+                Sort.Order.asc("sectionName"),  // Sort section name in ascending order
+                Sort.Order.desc("academicYear") // Sort academic year in descending order
+        );
+
+        Pageable pageable = PageRequest.of(0, 10, sort); //10 sections per page
+        PageImpl<Section> sectionPage = new PageImpl<>(this.sections, pageable, this.sections.size());
+
+        given(this.sectionService.findAll(Mockito.any(Pageable.class))).willReturn(sectionPage);
+
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("page", "0");
+        requestParams.add("size", "10");
+        requestParams.add("sort", "sectionName,academicYear,desc");
+        //can add sorting
+
+        //when & then
+        this.mockMvc.perform(get("/peerEval/section").accept(MediaType.APPLICATION_JSON).params(requestParams))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Find All Success"))
+                .andExpect(jsonPath("$.data.content", Matchers.hasSize(this.sections.size())))
+                .andExpect(jsonPath("$.data.content[0].sectionName").value("Section 1"))
+                .andExpect(jsonPath("$.data.content[0].academicYear").value("2023-2024"))
+                .andExpect(jsonPath("$.data.content[0].firstAndLastDate").value("8/21/23 and 5/01/24"))
+                .andExpect(jsonPath("$.data.content[0].teamDtos").isEmpty())
+                .andExpect(jsonPath("$.data.content[0].instructorDtos").isEmpty())
+                .andExpect(jsonPath("$.data.content[0].studentDtos").isEmpty());
+    }
+
+    @Test
     void testFindSectionByIdSuccess() throws Exception {
         //given
         given(this.sectionService.findById("Section 1")).willReturn(this.sections.get(0));
@@ -172,7 +223,7 @@ class SectionControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
-                .andExpect(jsonPath("$.data.id").value("Section 1"));
+                .andExpect(jsonPath("$.data.sectionName").value("Section 1"));
     } //will the last '.andExpect' be $.data.id or $.data.sectionName
 
     @Test
@@ -184,7 +235,7 @@ class SectionControllerTest {
         this.mockMvc.perform(get("/peerEval/section/Section 1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find section with Id Section 1"))
+                .andExpect(jsonPath("$.message").value("Could not find section with Id Section 1 :("))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
@@ -215,12 +266,12 @@ class SectionControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.data.sectionName").isNotEmpty())
                 .andExpect(jsonPath("$.data.academicYear").value(savedSection.getAcademicYear()))
                 .andExpect(jsonPath("$.data.firstAndLastDate").value(savedSection.getFirstAndLastDate()))
-                .andExpect(jsonPath("$.data.teams").value(savedSection.getTeams()))
-                .andExpect(jsonPath("$.data.instructors").value(savedSection.getInstructors()))
-                .andExpect(jsonPath("$.data.students").value(savedSection.getStudents()));
+                .andExpect(jsonPath("$.data.teamDtos").value(savedSection.getTeams()))
+                .andExpect(jsonPath("$.data.instructorDtos").value(savedSection.getInstructors()))
+                .andExpect(jsonPath("$.data.studentDtos").value(savedSection.getStudents()));
     }
 
     @Test
@@ -250,12 +301,12 @@ class SectionControllerTest {
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Update Success"))
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
+                .andExpect(jsonPath("$.data.sectionName").isNotEmpty())
                 .andExpect(jsonPath("$.data.academicYear").value(updatedSection.getAcademicYear()))
                 .andExpect(jsonPath("$.data.firstAndLastDate").value(updatedSection.getFirstAndLastDate()))
-                .andExpect(jsonPath("$.data.teams").value(updatedSection.getTeams()))
-                .andExpect(jsonPath("$.data.instructors").value(updatedSection.getInstructors()))
-                .andExpect(jsonPath("$.data.students").value(updatedSection.getStudents()));
+                .andExpect(jsonPath("$.data.teamDtos").value(updatedSection.getTeams()))
+                .andExpect(jsonPath("$.data.instructorDtos").value(updatedSection.getInstructors()))
+                .andExpect(jsonPath("$.data.studentDtos").value(updatedSection.getStudents()));
     }
 
     @Test

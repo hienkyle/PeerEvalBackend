@@ -3,6 +3,7 @@ package edu.tcu.cs.peerevalbackend.rubric;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.tcu.cs.peerevalbackend.rubric.dto.RubricDto;
 import edu.tcu.cs.peerevalbackend.rubric.rubricCriteria.RubricCriteria;
+import edu.tcu.cs.peerevalbackend.rubric.rubricCriteria.dto.RubricCriteriaDto;
 import edu.tcu.cs.peerevalbackend.system.StatusCode;
 import edu.tcu.cs.peerevalbackend.system.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false) // Turn off Spring Security
 public class RubricControllerTest {
 
     @Autowired
@@ -45,6 +46,7 @@ public class RubricControllerTest {
     void setUp() {
 
         this.rubrics = new ArrayList<>();
+        this.rubricCriteria = new ArrayList<>();
 
         Rubric r1 = new Rubric();
         r1.setRubricName("Rubric 1");
@@ -88,14 +90,14 @@ public class RubricControllerTest {
     @Test
     void testFindRubricByIdSuccess() throws Exception {
         //given
-        given(this.rubricService.findById("Rubric 1")).willReturn(this.rubrics.get(1));
+        given(this.rubricService.findById("Rubric 1")).willReturn(this.rubrics.get(0));
 
         //when & then
-        this.mockMvc.perform(get("peerEval/rubric/Rubric 1").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/peerEval/rubric/Rubric 1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Find One Success"))
-                .andExpect(jsonPath("$.data.id").value("Rubric 1"));
+                .andExpect(jsonPath("$.data.rubricName").value("Rubric 1"));
     }
 
     @Test
@@ -104,36 +106,43 @@ public class RubricControllerTest {
         given(this.rubricService.findById("Rubric 1")).willThrow(new ObjectNotFoundException("rubric", "Rubric 1"));
 
         //when & then
-        this.mockMvc.perform(get("peerEval/rubric/Rubric 1").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/peerEval/rubric/Rubric 1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(false))
                 .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
-                .andExpect(jsonPath("$.message").value("Could not find rubric with Id Rubric 1"))
+                .andExpect(jsonPath("$.message").value("Could not find rubric with Id Rubric 1 :("))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 
     @Test
     void testAddRubricSuccess() throws Exception {
+        List<RubricCriteriaDto> criteriaDtos = new ArrayList<>();
+        RubricCriteriaDto criteriaDto1 = new RubricCriteriaDto(1, "Criteria 1", "Criteria 1 is to grade blah blah blah.", 5);
+        RubricCriteriaDto criteriaDto2 = new RubricCriteriaDto(2, "Criteria 2", "Criteria 2 is to grade blah blah blah.", 5);
+        RubricCriteriaDto criteriaDto3 = new RubricCriteriaDto(3, "Criteria 3", "Criteria 3 is to grade blah blah blah.", 5);
+        criteriaDtos.add(criteriaDto1);
+        criteriaDtos.add(criteriaDto2);
         //given
         RubricDto rubricDto = new RubricDto(
                 "Rubric 1",
-                null
+                criteriaDtos
+
         );
 
         String json = this.objectMapper.writeValueAsString(rubricDto);
 
         Rubric savedRubric = new Rubric();
         savedRubric.setRubricName("Rubric 1");
-        savedRubric.setRubricCriteria(null);
+        savedRubric.setRubricCriteria(this.rubricCriteria);
 
         given(this.rubricService.save(Mockito.any(Rubric.class))).willReturn(savedRubric);
 
         //when & then
-        this.mockMvc.perform(post("peerEval/rubric").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(post("/peerEval/rubric").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.flag").value(true))
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Add Success"))
-                .andExpect(jsonPath("$.data.id").isNotEmpty())
-                .andExpect(jsonPath("$.data.rubricCriteria").isNotEmpty());
+                .andExpect(jsonPath("$.data.rubricName").isNotEmpty())
+                .andExpect(jsonPath("$.data.rubricCriteriaDtos").isNotEmpty());
     }
 
 }

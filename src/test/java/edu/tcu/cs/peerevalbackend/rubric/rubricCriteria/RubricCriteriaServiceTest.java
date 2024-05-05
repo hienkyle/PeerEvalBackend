@@ -70,7 +70,7 @@ public class RubricCriteriaServiceTest {
         //then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
-                .hasMessage("Could not find Criteria with Id 1 :(");
+                .hasMessage("Could not find rubricCriteria with Id 1 :(");
         verify(rubricCriteriaRepository, times(1)).findById(1);
     }
 

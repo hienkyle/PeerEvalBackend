@@ -4,6 +4,8 @@ import edu.tcu.cs.peerevalbackend.instructor.Instructor;
 import edu.tcu.cs.peerevalbackend.instructor.InstructorRepository;
 import edu.tcu.cs.peerevalbackend.section.Section;
 import edu.tcu.cs.peerevalbackend.section.SectionRepository;
+import edu.tcu.cs.peerevalbackend.student.Student;
+import edu.tcu.cs.peerevalbackend.student.StudentRepository;
 import edu.tcu.cs.peerevalbackend.team.Team;
 import edu.tcu.cs.peerevalbackend.team.TeamRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -14,51 +16,48 @@ import java.util.List;
 
 @Component
 public class DBDDataInitializer implements CommandLineRunner {
+    private final StudentRepository studentRepository;
+
     private TeamRepository teamRepository;
 
     private SectionRepository sectionRepository;
 
     private InstructorRepository instructorRepository;
 
-    public DBDDataInitializer(TeamRepository teamRepository, SectionRepository sectionRepository, InstructorRepository instructorRepository) {
+    public DBDDataInitializer(TeamRepository teamRepository, SectionRepository sectionRepository, InstructorRepository instructorRepository, StudentRepository studentRepository) {
         this.teamRepository = teamRepository;
         this.sectionRepository = sectionRepository;
         this.instructorRepository = instructorRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        // section setup
-        Section section = new Section();
-        section.setSectionName("Section name");
-
-        // teams setup
-        Team team1 = new Team();
-        team1.setTeamName("team 1");
-
-        Team team2 = new Team();
-        team2.setTeamName("team 2");
-
-        List<Team> teams = new ArrayList<>();
-        teams.add(team1);
-        teams.add(team2);
-
-        // set teams for section
-        section.setTeams(teams);
-
-        // instructors setup
+        //Instructors setup
         Instructor instructor1 = new Instructor();
         instructor1.setInstructorId("1");
+        instructor1.setName("alvie");
+        instructor1.setAcademicYear(2024);
+        instructor1.setStatus(ActiveStatus.IS_ACTIVE);
+        instructor1.setTeams(null);
 
         Instructor instructor2 = new Instructor();
         instructor2.setInstructorId("2");
+        instructor2.setName("ana");
+        instructor2.setAcademicYear(2024);
+        instructor2.setStatus(ActiveStatus.IS_ACTIVE);
+        instructor2.setTeams(null);
 
-        List<Instructor> instructors = new ArrayList<>();
-        instructors.add(instructor1);
-        instructors.add(instructor2);
+        instructorRepository.save(instructor1);
+        instructorRepository.save(instructor2);
 
-        // set instructors for section
-        section.setInstructors(instructors);
-
+        //Added a team
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2024");
+        team1.setInstructors(null);
+        team1.setStudents(null);
+        team1.setSection(null);
+        teamRepository.save(team1);
     }
 }
