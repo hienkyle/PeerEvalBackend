@@ -27,7 +27,7 @@ public class StudentController {
         this.studentToStudentDtoConverter = studentToStudentDtoConverter;
     }
 
-    @PostMapping()
+    @PostMapping("/")
     public Result addStudent(@RequestBody Student newStudent){
         Student savedStudent = studentService.addStudent(newStudent);
         StudentDto savedDto = studentToStudentDtoConverter.convert(savedStudent);
@@ -56,7 +56,7 @@ public class StudentController {
         return new Result(true, StatusCode.SUCCESS, "Successfully found student", foundDto);
     }
 
-    @GetMapping()
+    @GetMapping("/")
     public Result getAllStudents(){
         List<Student> foundStudents = studentService.findAll();
         List<StudentDto>  studentDtos = foundStudents.stream().map(this.studentToStudentDtoConverter::convert).collect(Collectors.toList());

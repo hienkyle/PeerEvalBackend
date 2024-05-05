@@ -16,11 +16,14 @@ import java.util.List;
 
 @Component
 public class DBDDataInitializer implements CommandLineRunner {
+    private final StudentRepository studentRepository;
+
     private TeamRepository teamRepository;
 
     private SectionRepository sectionRepository;
 
     private InstructorRepository instructorRepository;
+
 
     private StudentRepository studentRepository;
 
@@ -33,7 +36,7 @@ public class DBDDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // instructors setup
+        //Instructors setup
         Instructor instructor1 = new Instructor();
         instructor1.setInstructorId("1");
         instructor1.setName("alvie");
@@ -51,6 +54,7 @@ public class DBDDataInitializer implements CommandLineRunner {
         instructorRepository.save(instructor1);
         instructorRepository.save(instructor2);
 
+
         Student student1 = new Student();
         student1.setStudentId(1);
         student1.setFirstName("maribel");
@@ -58,5 +62,14 @@ public class DBDDataInitializer implements CommandLineRunner {
         student1.setPassword("123456");
 
         studentRepository.save(student1);
+
+        //Added a team
+        Team team1 = new Team();
+        team1.setTeamName("Team 1");
+        team1.setAcademicYear("2024");
+        team1.setInstructors(null);
+        team1.setStudents(null);
+        team1.setSection(null);
+        teamRepository.save(team1);
     }
 }
